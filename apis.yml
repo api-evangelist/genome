@@ -30,7 +30,7 @@ apis:
     properties:
       - type: Documentation
         url: https://developers.genome.eu/
-      - type: Getting Started
+      - type: GettingStarted
         url: https://developers.genome.eu/
       - type: Webhooks
         url: https://developers.genome.eu/
