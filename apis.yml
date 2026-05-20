@@ -35,6 +35,8 @@ apis:
       - type: Webhooks
         url: https://developers.genome.eu/
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/genome
   - type: Website
     url: https://genome.eu/
   - type: Documentation
