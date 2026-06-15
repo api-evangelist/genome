@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Genome Payments API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate a payout to a card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genome.eu/api/pf/payout",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "Sends funds to a cardholder using either full card data or a tokenized\ncard. The final status is returned asynchronously to the merchant\ncallback URL.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Host-to-Host",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Process a card transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genome.eu/api/pf/host-to-host",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a card transaction. The transaction_type parameter determines\nthe operation (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

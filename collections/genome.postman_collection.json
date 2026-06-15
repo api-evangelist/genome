@@ -1,0 +1,1223 @@
+{
+  "item": [
+    {
+      "id": "e02ae1e1-3058-4bc4-af35-99a7f8093454",
+      "name": "Payouts",
+      "description": {
+        "content": "Send funds to cardholders",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1a34cca8-0f20-487f-a27e-99f102a8ab76",
+          "name": "Initiate a payout to a card",
+          "request": {
+            "name": "Initiate a payout to a card",
+            "description": {
+              "content": "Sends funds to a cardholder using either full card data or a tokenized\ncard. The final status is returned asynchronously to the merchant\ncallback URL.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "pf",
+                "payout"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "api_version",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_account",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_password",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "method",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "transaction_unique_id",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "amount",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "callback_url",
+                  "value": "<uri>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "user_id",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "user_email",
+                  "value": "<email>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card[card_number]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card[card_exp_month]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card[card_exp_year]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card[card_cvv]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card[card_holder]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card[card_token]",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "14754903-6521-47a1-b2f7-dee37dbcc582",
+              "name": "Payout request accepted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "pf",
+                    "payout"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "api_version",
+                      "value": "1"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_account",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_password",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "method",
+                      "value": "init"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_unique_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "currency",
+                      "value": "EUR"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_number]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_exp_month]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_exp_year]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_cvv]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_holder]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_token]",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"sessionid\": \"string\",\n  \"timestamp\": 1467,\n  \"status\": \"error\",\n  \"code\": 5081,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1dced43e-7edd-4a65-9627-92594df2dbf4",
+              "name": "Error response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "pf",
+                    "payout"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "api_version",
+                      "value": "1"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_account",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_password",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "method",
+                      "value": "init"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_unique_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "currency",
+                      "value": "EUR"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_number]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_exp_month]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_exp_year]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_cvv]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_holder]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_token]",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"code\": 4298,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b68b7d06-c50b-411c-b410-615c14ba02b9",
+              "name": "Error response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "pf",
+                    "payout"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "api_version",
+                      "value": "1"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_account",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_password",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "method",
+                      "value": "init"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_unique_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "currency",
+                      "value": "EUR"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_number]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_exp_month]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_exp_year]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_cvv]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_holder]",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card[card_token]",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"code\": 4298,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "2658f799-648b-4231-9526-f8d8fe2b028f",
+      "name": "Host-to-Host",
+      "description": {
+        "content": "Direct card processing",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e0039fee-6c47-4706-b563-cf9a928955d5",
+          "name": "Process a card transaction",
+          "request": {
+            "name": "Process a card transaction",
+            "description": {
+              "content": "Submit a card transaction. The transaction_type parameter determines\nthe operation (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "pf",
+                "host-to-host"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "api_version",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_account",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_password",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "transaction_type",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "transaction_unique_id",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "amount",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "callback_url",
+                  "value": "<uri>"
+                },
+                {
+                  "disabled": false,
+                  "key": "user_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "user_email",
+                  "value": "<email>"
+                },
+                {
+                  "disabled": false,
+                  "key": "user_ip",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card_number",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card_exp_month",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card_exp_year",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card_cvv",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card_holder",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "card_token",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "67a76464-522d-4f25-a93f-1ffdc6f01320",
+              "name": "Transaction response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "pf",
+                    "host-to-host"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "api_version",
+                      "value": "1"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_account",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_password",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_unique_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "callback_url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_ip",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_number",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_exp_month",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_exp_year",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_cvv",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_holder",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_token",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"sessionid\": \"string\",\n  \"timestamp\": 8113,\n  \"status\": \"success\",\n  \"code\": 776,\n  \"message\": \"string\",\n  \"redirect_url\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ce6d8ca7-95c6-4f5c-a08c-79cc887f4c5c",
+              "name": "Error response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "pf",
+                    "host-to-host"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "api_version",
+                      "value": "1"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_account",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_password",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_unique_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "callback_url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_ip",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_number",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_exp_month",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_exp_year",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_cvv",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_holder",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_token",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"code\": 4298,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9708cc57-ebd8-4b6d-922b-4e8f0a462543",
+              "name": "Error response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "pf",
+                    "host-to-host"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "api_version",
+                      "value": "1"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_account",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "merchant_password",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "transaction_unique_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "callback_url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_ip",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_number",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_exp_month",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_exp_year",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_cvv",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_holder",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "card_token",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"code\": 4298,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.genome.eu",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "2384278c-2542-441a-95f6-e3118038ef4a",
+    "name": "Genome Payments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Genome merchant payments API. Includes the Payout API for sending funds to\ncardholders (full card or tokenized card) and the Host-to-Host API for\nprocessing card transactions (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND,\nVOID, CHECK). All endpoints accept application/x-www-form-urlencoded\nserialized key-value pairs; the host-to-host endpoint also accepts JSON.\nEach request is authenticated using merchant_account and merchant_password\ncredentials issued by Genome.\n\n\nContact Support:\n Name: Genome Developer Documentation",
+      "type": "text/plain"
+    }
+  }
+}
