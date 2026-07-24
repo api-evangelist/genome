@@ -1,0 +1,157 @@
+openapi: 3.1.0
+info:
+  title: Genome Payments Host-to-Host API
+  description: 'Genome merchant payments API. Includes the Payout API for sending funds to
+
+    cardholders (full card or tokenized card) and the Host-to-Host API for
+
+    processing card transactions (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND,
+
+    VOID, CHECK). All endpoints accept application/x-www-form-urlencoded
+
+    serialized key-value pairs; the host-to-host endpoint also accepts JSON.
+
+    Each request is authenticated using merchant_account and merchant_password
+
+    credentials issued by Genome.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Genome Developer Documentation
+    url: https://developers.genome.eu/
+servers:
+- url: https://api.genome.eu
+  description: Production
+tags:
+- name: Host-to-Host
+  description: Direct card processing
+paths:
+  /api/pf/host-to-host:
+    post:
+      tags:
+      - Host-to-Host
+      summary: Process a card transaction
+      description: 'Submit a card transaction. The transaction_type parameter determines
+
+        the operation (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK).
+
+        '
+      operationId: processTransaction
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HostToHostRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostToHostRequest'
+      responses:
+        '200':
+          description: Transaction response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+components:
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    TransactionResponse:
+      type: object
+      properties:
+        sessionid:
+          type: string
+        timestamp:
+          type: integer
+        status:
+          type: string
+          enum:
+          - pending
+          - success
+          - decline
+          - error
+        code:
+          type: integer
+        message:
+          type: string
+        redirect_url:
+          type: string
+          description: Present for 3DS flows
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+    HostToHostRequest:
+      type: object
+      required:
+      - api_version
+      - merchant_account
+      - merchant_password
+      - transaction_type
+      - transaction_unique_id
+      properties:
+        api_version:
+          type: string
+          example: '1'
+        merchant_account:
+          type: string
+        merchant_password:
+          type: string
+        transaction_type:
+          type: string
+          enum:
+          - AUTH
+          - AUTH3D
+          - SALE
+          - SALE3D
+          - SETTLE
+          - REFUND
+          - VOID
+          - CHECK
+        transaction_unique_id:
+          type: string
+        amount:
+          type: string
+        currency:
+          type: string
+        callback_url:
+          type: string
+          format: uri
+        user_id:
+          type: string
+        user_email:
+          type: string
+          format: email
+        user_ip:
+          type: string
+        card:
+          type: object
+          properties:
+            card_number:
+              type: string
+            card_exp_month:
+              type: string
+            card_exp_year:
+              type: string
+            card_cvv:
+              type: string
+            card_holder:
+              type: string
+            card_token:
+              type: string

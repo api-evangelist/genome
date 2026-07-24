@@ -1,0 +1,146 @@
+openapi: 3.1.0
+info:
+  title: Genome Payments Host-to-Host Payouts API
+  description: 'Genome merchant payments API. Includes the Payout API for sending funds to
+
+    cardholders (full card or tokenized card) and the Host-to-Host API for
+
+    processing card transactions (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND,
+
+    VOID, CHECK). All endpoints accept application/x-www-form-urlencoded
+
+    serialized key-value pairs; the host-to-host endpoint also accepts JSON.
+
+    Each request is authenticated using merchant_account and merchant_password
+
+    credentials issued by Genome.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Genome Developer Documentation
+    url: https://developers.genome.eu/
+servers:
+- url: https://api.genome.eu
+  description: Production
+tags:
+- name: Payouts
+  description: Send funds to cardholders
+paths:
+  /api/pf/payout:
+    post:
+      tags:
+      - Payouts
+      summary: Initiate a payout to a card
+      description: 'Sends funds to a cardholder using either full card data or a tokenized
+
+        card. The final status is returned asynchronously to the merchant
+
+        callback URL.
+
+        '
+      operationId: initPayout
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayoutRequest'
+      responses:
+        '200':
+          description: Payout request accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayoutResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+    PayoutResponse:
+      type: object
+      properties:
+        sessionid:
+          type: string
+          maxLength: 36
+        timestamp:
+          type: integer
+        status:
+          type: string
+          enum:
+          - pending
+          - success
+          - decline
+          - error
+        code:
+          type: integer
+        message:
+          type: string
+    PayoutRequest:
+      type: object
+      required:
+      - api_version
+      - merchant_account
+      - merchant_password
+      - method
+      - transaction_unique_id
+      - amount
+      - currency
+      - callback_url
+      - user_id
+      properties:
+        api_version:
+          type: string
+          example: '1'
+        merchant_account:
+          type: string
+        merchant_password:
+          type: string
+        method:
+          type: string
+          example: init
+        transaction_unique_id:
+          type: string
+        amount:
+          type: string
+        currency:
+          type: string
+          example: EUR
+        callback_url:
+          type: string
+          format: uri
+        user_id:
+          type: string
+        user_email:
+          type: string
+          format: email
+        card[card_number]:
+          type: string
+        card[card_exp_month]:
+          type: string
+        card[card_exp_year]:
+          type: string
+        card[card_cvv]:
+          type: string
+        card[card_holder]:
+          type: string
+        card[card_token]:
+          type: string
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
