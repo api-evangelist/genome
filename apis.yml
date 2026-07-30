@@ -5,9 +5,21 @@ description: >-
   use Genome hosted payment pages, host to host integration, Payout API and
   Query on demand API.
 type: Index
+accessModel:
+  pricing: freemium
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Freemium
+  confidence: medium
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
 position: Consumer
 access: 3rd-Party
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/genome.png
 tags:
   - Finance
   - Payments
@@ -17,23 +29,40 @@ url: >-
   https://raw.githubusercontent.com/api-evangelist/genome/refs/heads/main/apis.yml
 specificationVersion: '0.19'
 apis:
-  - aid: genome:genome
-    name: Genome
-    description: >-
-      Below you can find the information and tutorials that will teach you how
-      to use Genome hosted payment pages, host to host integration, Payout API
-      and Query on demand API.
-    humanURL: https://genome.eu/docs/
-    tags:
-      - Finance
-      - Payments
-    properties:
-      - type: Documentation
-        url: https://developers.genome.eu/
-      - type: GettingStarted
-        url: https://developers.genome.eu/
-      - type: Webhooks
-        url: https://developers.genome.eu/
+- aid: genome:genome
+  name: Genome
+  description: >-
+    Below you can find the information and tutorials that will teach you how to use Genome hosted payment
+    pages, host to host integration, Payout API and Query on demand API.
+  humanURL: https://genome.eu/docs/
+  tags:
+  - Finance
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://developers.genome.eu/
+  - type: GettingStarted
+    url: https://developers.genome.eu/
+  - type: Webhooks
+    url: https://developers.genome.eu/
+- aid: genome:genome-host-to-host-api
+  name: Genome Host-to-Host API
+  description: Direct card processing
+  humanURL: https://genome.eu/docs/
+  tags:
+  - Host-to-Host
+  properties:
+  - type: OpenAPI
+    url: openapi/genome-host-to-host-api-openapi.yml
+- aid: genome:genome-payouts-api
+  name: Genome Payouts API
+  description: Send funds to cardholders
+  humanURL: https://genome.eu/docs/
+  tags:
+  - Payouts
+  properties:
+  - type: OpenAPI
+    url: openapi/genome-payouts-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/genome-agentic-access.yml
