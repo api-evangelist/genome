@@ -1,0 +1,16 @@
+{
+  "provider": "genome",
+  "sources": [
+    "genome-host-to-host-api-openapi.yml",
+    "genome-payouts-api-openapi.yml"
+  ],
+  "outputs": [
+    "genome-host-to-host-api-openapi.yml",
+    "genome-payouts-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
