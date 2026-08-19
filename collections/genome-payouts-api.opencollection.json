@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Genome Payments Host-to-Host Payouts API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate a payout to a card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genome.eu/api/pf/payout",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "Sends funds to a cardholder using either full card data or a tokenized\ncard. The final status is returned asynchronously to the merchant\ncallback URL.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
