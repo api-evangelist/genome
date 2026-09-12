@@ -1,0 +1,110 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/ + https://status.genome.eu + https://apimetrics.genome.eu + https://genome.eu/merchant-terms-of-use/
+provider: Genome
+providerId: genome
+description: >-
+  Versioning, deprecation, availability and support commitments for the Genome API surface, read from
+  the provider's own pages and probed live on 2026-09-12.
+versioning:
+  scheme: in-body integer version parameter (api_version), currently 1
+  psd2_scheme: URL path segment (/psd2/v1/)
+  policy_published: false
+  note: >-
+    Only one version has ever been documented. Genome reserves response code 1005 (Unsupported API
+    version) and 5001 (Unsupported QoD API version), which tells a caller that version negotiation
+    exists, but no policy states how long a version is supported or how a new one is announced.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  observed_deprecations:
+  - item: Legacy Hosted Payment Page signature calculation
+    status: deprecated
+    replacement: HS256 JWT signed with the SHA-256 digest of the payment page secret
+    removal_date: not stated
+    source: https://developers.genome.eu/merchants/hosted-payment-page/
+  - item: receiver_address (SEPA Payout request field)
+    status: deprecated
+    replacement: the structured receiver_street / receiver_building_number / receiver_apartment fields
+    removal_date: not stated
+    source: https://developers.genome.eu/sepa-payout-api/
+  note: >-
+    Genome marks individual things deprecated in prose but publishes no deprecation POLICY, no removal
+    dates and no Deprecation/Sunset response headers. A caller depending on the legacy HPP signature has
+    no machine-readable warning and no dated horizon, so no Deprecation pointer is wired into apis.yml.
+status_page:
+  url: https://status.genome.eu
+  probed: '2026-09-12'
+  http_status: 200
+  state_at_probe: All Systems Operational
+  machine_readable_api: false
+  api_note: >-
+    /api/v2/status.json, /api/v2/summary.json, /api/v2/components.json and /history.rss all return 404 —
+    this is not an Atlassian Statuspage and exposes no JSON feed, so an agent cannot poll it.
+  subscribe: true
+  components:
+  - My Genome portal
+  - Bank Transfer
+  - Card transactions
+  - Cards ordering and delivery
+  - Merchant Open Banking
+  - Reports and Statistics
+  - Notification Service
+  - PSD2 Dedicated interface
+  - Gateway API
+  - Core
+  - Genome.eu web site
+  - Android application
+  - IOS application
+  - Client verification
+  published_metrics:
+  - API Uptime
+  - API Response Time
+  - MY Portal Uptime
+  - MY Portal Response Time
+  - Genome.eu site uptime
+  - Genome.eu Response Time
+  - PSD2 Dedicated interface Uptime
+performance_metrics:
+  url: https://apimetrics.genome.eu
+  probed: '2026-09-12'
+  http_status: 200
+  title: Genome Performance Metrics
+  charts:
+  - OAuth Success Rate
+  - OAuth Latency
+  format: rendered PNG charts, no underlying data feed
+  note: >-
+    This is the PSD2 RTS availability-and-performance publication obligation being met — Article 32(4)
+    of the Commission Delegated Regulation (EU) 2018/389 requires an ASPSP to publish quarterly
+    statistics on the availability and performance of its dedicated interface. Genome publishes it
+    continuously, which is more than the rule asks, but only as images; there is no machine-readable
+    series behind the charts.
+changelog:
+  published: false
+  note: >-
+    No changelog, release-notes or what's-new page exists anywhere on developers.genome.eu — the docs
+    sitemap lists 14 pages and none of them is dated. Pricing is the one surface that is versioned:
+    both merchant pricing pages carry a "Previous versions / Download version 0.1" link. No ChangeLog
+    pointer is emitted.
+sla:
+  published: false
+  support_hours: Monday to Friday 08:00-20:00, with 24/7 virtual assistance
+  support_email: support@genome.eu
+  merchant_terms: https://genome.eu/merchant-terms-of-use/
+  note: >-
+    No uptime or response-time commitment is published for the API. The status page reports achieved
+    uptime, which is a measurement, not a commitment.
+regulatory_status:
+  entity: UAB "Maneuver LT"
+  address: Zalgirio g. 92-510, LT-09303 Vilnius, Lithuania
+  licence: Electronic Money Institution
+  supervisor: Bank of Lithuania (Lietuvos bankas)
+  supervisor_url: https://www.lb.lt
+  source: https://genome.eu/legal-regulations/
+operations_deprecated_in_openapi: 0
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

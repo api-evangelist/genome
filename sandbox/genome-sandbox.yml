@@ -1,0 +1,85 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/merchants/host-to-host-api/ + https://developers.genome.eu/merchants/hosted-payment-page/
+docs: https://developers.genome.eu/merchants/host-to-host-api/
+provider: Genome
+providerId: genome
+description: >-
+  Genome's test surface. There is no sandbox HOSTNAME and no test-mode key — test traffic is separated
+  from live traffic by the CURRENCY on the request. Every value below is published verbatim by Genome.
+model:
+  type: currency-discriminated
+  host: https://api.genome.eu (the production host; there is no separate sandbox host)
+  discriminator_field: currency
+  discriminator_value: XTS
+  rationale: >-
+    XTS is the ISO 4217 code reserved for testing. Genome states that test payments in XTS work even
+    after a merchant account is approved and LIVE.
+  key_prefixes: none
+  test_clock: not offered
+  risk_note: >-
+    Because the test/live boundary is a payload field on the production host rather than a separate
+    credential or endpoint, a wrong currency value is a real-money mistake. There is no fail-safe: the
+    same merchant_account and merchant_password process both.
+hosted_payment_page:
+  test_mode: >-
+    A payment page can be exercised in Test mode from the merchant dashboard before activation. Genome
+    states that real transactions are only processed on an ACTIVATED payment page, which makes
+    activation the explicit go-live gate.
+  source: https://developers.genome.eu/merchants/hosted-payment-page/
+test_cards:
+  note: >-
+    Published by Genome. These cards support the XTS currency only. CVV is any 3 random digits; expiry
+    is any month 01-12 with a year of 2020 or later.
+  cards:
+  - brand: Visa
+    flow: 2D
+    number: '4111111111111111'
+    cvv: any 3 digits
+    expiry: MM 01-12 / YYYY 2020 or greater
+  - brand: Mastercard
+    flow: 2D
+    number: '5555555555554444'
+    cvv: any 3 digits
+    expiry: MM 01-12 / YYYY 2020 or greater
+  - brand: Visa
+    flow: 3D Secure
+    number: '4012000300001003'
+    cvv: any 3 digits
+    expiry: MM 01-12 / YYYY 2020 or greater
+  - brand: Mastercard
+    flow: 3D Secure
+    number: '5191330000004415'
+    cvv: any 3 digits
+    expiry: MM 01-12 / YYYY 2020 or greater
+onboarding_flow:
+  source: https://developers.genome.eu/merchants/host-to-host-api/
+  steps:
+  - Sign up at https://my.genome.eu
+  - Send the list of transaction types your business model needs to support@genome.eu
+  - Test every one of those transaction types in XTS
+  - Send the references of the test transactions to support@genome.eu to close out test integration
+  - Genome's integration team activates the account
+  - Implement production credentials
+  - Re-test production integration across all transaction types
+  self_service: false
+  note: >-
+    Test access is not self-service. Two of the seven steps require a human at Genome to read an email
+    and act, so an agent cannot get from signup to a working test call without a person in the loop.
+fixtures:
+  triggers: none published
+  simulated_declines: >-
+    Genome publishes no magic amounts or card numbers that force a specific decline code, so the
+    137-code error registry cannot be exercised deterministically in test.
+  test_ibans: none published
+  vop_test_values: >-
+    The Verification of Payee documentation shows a worked example against DE52100400000371301300 but
+    does not designate it as a reserved test value.
+gaps:
+- No separate sandbox host or test key prefix.
+- No fixtures or triggers to force specific decline codes.
+- No test clock or time simulation for the 7-day authorization window.
+- No published test data for the SEPA Payout, Query on Demand or Verification of Payee surfaces.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

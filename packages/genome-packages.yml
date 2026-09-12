@@ -1,0 +1,188 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/merchants/ready-to-go-libraries/ + registry metadata endpoints (repo.packagist.org, repo1.maven.org, trunk.cocoapods.org) + https://github.com/genome-eu
+provider: Genome
+providerId: genome
+description: >-
+  First-party Genome client libraries, mobile SDKs and e-commerce plugins. Genome links the Java and
+  PHP merchant clients from its own "Ready-to-go libraries" documentation page; the mobile SDKs,
+  browser SDK and shop plugins are published from the company's own GitHub organisation
+  (github.com/genome-eu) and its own CDN (pay.genome.eu). Versions and publish dates below were read
+  from each registry's metadata endpoint on 2026-09-12.
+note: >-
+  Currency is the headline finding. The two client libraries Genome actively documents were both
+  published 2025-11-25 and are still at 0.0.x. Everything else the company ships — the iOS and
+  Android payment SDKs and every e-commerce plugin — was last released or pushed between 2019 and
+  2022, four to seven years before the API surface they wrap (the Hosted Payment Page JWT flow, the
+  Verification of Payee API and the SEPA Payout API all post-date them).
+packages:
+- name: genome/merchant
+  registry: packagist
+  language: PHP
+  official: true
+  url: https://packagist.org/packages/genome/merchant
+  metadata_url: https://repo.packagist.org/p2/genome/merchant.json
+  source: https://github.com/genome-eu/php-merchant-client
+  license: MIT
+  version: 0.0.4
+  published: '2025-11-25'
+  requires: PHP 7.2+
+  covers:
+  - Hosted Payment Page redirect URL generation
+  - MODE_A and MODE_A_TS signature generation
+  - assertCallbackSignature callback verification
+- name: eu.genome:merchantclient
+  registry: maven-central
+  language: Java
+  official: true
+  url: https://central.sonatype.com/artifact/eu.genome/merchantclient
+  metadata_url: https://repo1.maven.org/maven2/eu/genome/merchantclient/maven-metadata.xml
+  source: https://github.com/genome-eu/java-merchant-client
+  license: MIT
+  version: 0.0.1
+  published: '2025-11-25'
+  requires: Java 8+
+  covers:
+  - Hosted Payment Page redirect URL generation
+  - MODE_A and MODE_A_TS signature generation
+  - assertCallbackSignature callback verification
+- name: eu.genome.android:sdk-payment
+  registry: maven-central
+  language: Kotlin/Android
+  official: true
+  url: https://repo1.maven.org/maven2/eu/genome/android/sdk-payment/
+  metadata_url: https://repo1.maven.org/maven2/eu/genome/android/sdk-payment/maven-metadata.xml
+  source: https://github.com/genome-eu/payment-sdk-android
+  license: MIT
+  version: 1.1.0
+  published: '2021-10-11'
+  note: Last release 2021-10-11; not referenced from the current developer documentation.
+- name: GenomePaymentSdk
+  registry: cocoapods
+  language: Swift/iOS
+  official: true
+  url: https://cocoapods.org/pods/GenomePaymentSdk
+  metadata_url: https://trunk.cocoapods.org/api/v1/pods/GenomePaymentSdk
+  source: https://github.com/genome-eu/payment-sdk-ios
+  license: MIT
+  version: 1.1.1
+  published: '2021-10-12'
+  note: >-
+    Published to the CocoaPods trunk by artem.drozd@genome.eu, which is what establishes it as
+    first-party. Last release 2021-10-12.
+- name: Financial Pixel SDK (iframe build)
+  registry: cdn
+  language: JavaScript (ES module)
+  official: true
+  url: https://pay.genome.eu/sdk/iframe.es.js
+  source: https://developers.genome.eu/merchants/web-sdk-integration/
+  version: null
+  published: null
+  note: >-
+    Distributed only as an unpinned ES module from Genome's own payment host — the documented import
+    URL carries no version segment and no integrity hash, so it floats to whatever is deployed. There
+    is no registry metadata endpoint to query and a consumer cannot tell which build they loaded
+    either; that is the finding, not a gap in this probe.
+- name: Financial Pixel SDK (popup build)
+  registry: cdn
+  language: JavaScript (ES module)
+  official: true
+  url: https://pay.genome.eu/sdk/popup.es.js
+  source: https://developers.genome.eu/merchants/web-sdk-integration/
+  version: null
+  published: null
+  note: Same unpinned CDN distribution as the iframe build.
+- name: genome-eu/jfpx
+  registry: github
+  language: Java
+  official: true
+  url: https://github.com/genome-eu/jfpx
+  version: null
+  published: '2022-01-14'
+  note: >-
+    Java reference implementation of Genome HPP/FPX. Source-only — never published to Maven Central,
+    so there is no registry version; the date is the last push to the default branch.
+- name: genome-eu/hpp
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/hpp
+  version: null
+  published: '2022-03-26'
+  note: Hosted Payment Page PHP reference integration. Source-only, no registry release.
+- name: genome-eu/woocommerce
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/woocommerce
+  version: null
+  published: '2021-02-11'
+  note: WooCommerce plugin. Source-only, not listed on wordpress.org; date is the last push.
+- name: genome-eu/magento-v2
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/magento-v2
+  version: null
+  published: '2021-10-27'
+  note: Magento 2 plugin. Source-only, no Packagist release.
+- name: genome-eu/magento
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/magento
+  version: null
+  published: '2019-07-08'
+  note: Magento 1 plugin. Source-only.
+- name: genome-eu/prestashop
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/prestashop
+  license: BSD-2-Clause
+  version: null
+  published: '2020-09-10'
+  note: PrestaShop plugin. Source-only.
+- name: genome-eu/opencart
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/opencart
+  license: BSD-2-Clause
+  version: null
+  published: '2020-09-10'
+  note: OpenCart plugin. Source-only.
+- name: genome-eu/oxid
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/oxid
+  license: GPL-3.0
+  version: null
+  published: '2020-09-10'
+  note: OXID eShop plugin. Source-only.
+- name: genome-eu/drupal
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/drupal
+  version: null
+  published: '2019-07-08'
+  note: Drupal Commerce plugin. Source-only, not listed on drupal.org.
+- name: genome-eu/ecwid
+  registry: github
+  language: PHP
+  official: true
+  url: https://github.com/genome-eu/ecwid
+  version: null
+  published: '2021-10-27'
+  note: Ecwid plugin. Source-only.
+summary:
+  total: 15
+  registry_published: 4
+  cdn_unpinned: 2
+  source_only: 9
+  official: 15
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

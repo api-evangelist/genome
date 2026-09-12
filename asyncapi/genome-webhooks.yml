@@ -1,0 +1,215 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/webhooks/ + https://developers.genome.eu/sepa-payout-api/ + https://developers.genome.eu/merchants/host-to-host-api/ + https://developers.genome.eu/merchants/hosted-payment-page/
+provider: Genome
+providerId: genome
+description: >-
+  Genome's event surface. There is no AsyncAPI document and no event catalog endpoint — Genome
+  publishes THREE separate server-to-server callback channels, each with its own content type, its own
+  signature scheme and its own payload shape. This file records all three as published; nothing here
+  is invented.
+asyncapi_published: false
+asyncapi_note: >-
+  No /asyncapi.yaml, /asyncapi.json or event-catalog surface exists on any Genome host, and the GitHub
+  organisation publishes none. The webhook documentation is prose-and-table only, so no AsyncAPI
+  pointer is emitted — writing one would be authoring a contract on the provider's behalf.
+subscription_model:
+  self_service: false
+  mechanism: >-
+    A merchant cannot register a webhook through an API or a dashboard. Genome's documented process is
+    to email accounts@genome.eu with the delivery URL, attemptMax, direction and outcome, and a person
+    configures it. There is no list, update or delete endpoint, and no way to read back the current
+    configuration.
+  configuration_fields:
+  - name: url
+    format: varchar
+    description: URL to receive data
+  - name: attemptMax
+    format: uint16
+    description: Number of retries to deliver data
+  - name: direction
+    format: enum(incoming_only)
+    description: incoming_only — transactions that increase balance (credit transactions)
+  - name: outcome
+    format: enum(success_only)
+    description: success_only — information about successful transactions only
+  source: https://developers.genome.eu/webhooks/
+channels:
+- id: incoming-payment-notification
+  name: Incoming payment notification
+  transport: HTTPS POST to the merchant URL
+  content_type: application/json
+  direction: Genome -> merchant
+  docs: https://developers.genome.eu/webhooks/
+  headers:
+  - name: User-Agent
+    value: Genome Callback System
+  - name: Content-Type
+    value: application/json
+  - name: X-Version
+    value: '1'
+    description: Callback version. Current value is 1.
+  - name: X-Signature
+    description: HmacSHA256 of the full callback request body, keyed with the per-customer secret, hex encoded.
+  payload_fields:
+  - name: transaction_id
+    type: uint64
+    required: true
+    description: Transaction ID in the Genome system
+  - name: transaction_type
+    type: enum
+    required: true
+    examples: [direct, sepa_incoming, sepa_instant_incoming, swift_incoming]
+  - name: transaction_status
+    type: enum
+    required: true
+    examples: [processing, success, error, decline]
+  - name: created_at
+    type: string (RFC 3339)
+    required: true
+  - name: booked_at
+    type: string (RFC 3339)
+    required: false
+  - name: processed_at
+    type: string (RFC 3339)
+    required: false
+  - name: amount
+    type: object {amount decimal major units, currency ISO 4217 alpha-3}
+    required: false
+    description: May be absent on error or decline
+  - name: description
+    type: string
+    required: false
+  - name: error
+    type: object {code uint32, message string}
+    required: false
+    description: May be absent under incoming_only / success_only settings
+  - name: sender
+    type: participant {wallet_id, account_id, iban, bic, name}
+    required: false
+  - name: receiver
+    type: participant {wallet_id, account_id, iban, bic, name}
+    required: false
+  - name: reference
+    type: transaction
+    required: false
+    description: The full referenced transaction, when this callback references another transaction
+  - name: bulk_id
+    type: uint64
+    required: false
+    description: Bulk ID when the transaction belongs to a mass-transfer batch
+  - name: payment_id
+    type: uint64
+    required: false
+  acknowledgement: HTTP 200
+  delivery:
+    guarantee: at-least-once
+    duplicates: >-
+      Genome states explicitly that the same event can be resent multiple times for a single
+      transaction, so the receiver must deduplicate on transaction_id.
+    retry_schedule_after_last_attempt:
+    - attempt: 1
+      after: 00:00:01
+    - attempt: 2
+      after: 00:00:03
+    - attempt: 3
+      after: 00:00:09
+    - attempt: 4
+      after: 00:00:27
+    - attempt: 5
+      after: 00:01:21
+    - attempt: 6
+      after: 00:04:03
+    - attempt: 7
+      after: 00:12:09
+    - attempt: 8
+      after: 00:36:27
+    - attempt: 9
+      after: 01:49:21
+    - attempt: 10
+      after: 05:28:03
+    - attempt: 11
+      after: 16:24:09
+    - attempt: 12
+      after: 49:12:27
+    backoff: exponential, x3 per attempt, capped by the per-customer attemptMax
+    total_window: about 72 hours across 12 attempts
+    on_exhaustion: Genome stops sending notifications after the last unsuccessful retry.
+- id: card-transaction-callback
+  name: Host-to-Host transaction callback
+  transport: HTTPS POST to callback_url supplied on the request
+  content_type: application/x-www-form-urlencoded
+  direction: Genome -> merchant
+  docs: https://developers.genome.eu/merchants/host-to-host-api/
+  signature:
+    field: checkSum
+    algorithm: >-
+      SHA-256 over the callback fields excluding checkSum, sorted by key, joined as key=value with a
+      pipe separator, with the merchant private signature appended as the final segment.
+  payload_fields:
+  - name: token
+    type: string(36)
+  - name: reference
+    type: string(20)
+  - name: transaction_unique_id
+    type: string(1-45)
+  - name: status
+    type: enum
+    values: [SUCCESS, DECLINED, ERROR, FRAUDED]
+  - name: code
+    type: integer
+    description: Response code from errors/genome-error-codes.yml
+  - name: message
+    type: string(6-255)
+  - name: checkSum
+    type: string(64)
+  acknowledgement: HTTP 200 required, body text "OK" optional
+  delivery:
+    guarantee: at-least-once
+    note: >-
+      If Genome does not get a 200 the callback is not considered received and Genome re-sends
+      periodically; the number of attempts is limited but the schedule is not published for this channel.
+- id: sepa-payout-callback
+  name: SEPA Payout callback
+  transport: HTTPS POST to callback_url supplied on the payout request
+  content_type: application/x-www-form-urlencoded
+  direction: Genome -> merchant
+  docs: https://developers.genome.eu/sepa-payout-api/
+  signature:
+    field: checkSum
+    algorithm: same pipe-joined, key-sorted SHA-256 scheme as the card transaction callback
+  statuses: [SUCCESS, ERROR, DECLINED, PENDING, FRAUDED]
+  note: >-
+    The synchronous payout response carries status "pending" and is explicitly NOT final. The final
+    outcome arrives only on this callback, so a caller with no reachable HTTPS endpoint cannot learn a
+    payout's result except by polling https://api.genome.eu/api/mp/transaction.
+  acknowledgement: HTTP 200 required, body text "OK" optional
+- id: hpp-callback
+  name: Hosted Payment Page callback
+  transport: HTTPS POST to the URL configured in the payment page settings
+  content_type: application/json
+  direction: Genome -> merchant
+  docs: https://developers.genome.eu/merchants/hosted-payment-page/
+  headers:
+  - name: X-Signature
+    description: HmacSHA256 of the request body, hex encoded
+  - name: X-Signature-Algorithm
+    value: HmacSHA256
+  - name: X-API-Key
+    description: The merchant's API key from the Genome portal HPP settings
+  - name: X-Request-Id
+    description: Unique identifier of the request; quote it to support on any issue.
+  note: Custom claims sent in the session JWT (custom_*) are forwarded in this callback.
+gaps:
+- No AsyncAPI or other machine-readable event contract.
+- No self-service subscription management; webhooks are configured by email.
+- No event replay or backfill endpoint.
+- Four channels with three different signature schemes and two content types.
+- The incoming-payment channel can only be filtered to incoming_only / success_only, so outgoing and failed transactions have no notification path.
+summary:
+  channels: 4
+  asyncapi_documents: 0
+  signature_schemes: 3
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

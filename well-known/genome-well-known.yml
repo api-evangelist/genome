@@ -1,0 +1,213 @@
+generated: '2026-09-12'
+method: probed
+source: live HTTP probes of every host this record knows, 2026-09-12
+provider: Genome
+providerId: genome
+description: >-
+  Probe of the RFC-registered /.well-known/ discovery paths across every host in the Genome record —
+  the registrable domain and www, the API host named by every OpenAPI servers[] block, the developer
+  documentation host, the payment host, the customer portal that serves the PSD2 and OAuth 2.0
+  surfaces, and the legacy gateway host.
+note: >-
+  NOTHING IS SERVED. Not one path returned a real document on any host, so no WellKnown or SecurityTxt
+  pointer is wired into apis.yml — this file records an absence, not a presence. Two hosts
+  (pay.genome.eu and my.genome.eu) answer HTTP 200 to every /.well-known/* path with the same
+  single-page-app HTML shell; those are recorded as misses with status 200 and a shell note, because
+  a 200 that returns HTML is not a document. Genome runs a PSD2 OAuth 2.0 authorisation surface at
+  https://my.genome.eu/oauth2 (documented at https://developers.genome.eu/psd2-api/) but publishes no
+  RFC 8414 /.well-known/oauth-authorization-server or OpenID Connect discovery document for it, so a
+  TPP must read the base URLs out of prose.
+hosts:
+- host: genome.eu
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+- host: www.genome.eu
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+- host: api.genome.eu
+  note: The only OpenAPI servers[] host in this record; it serves the live payment endpoints.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: developers.genome.eu
+  note: Gatsby-generated documentation host; unmatched paths render a real 404 page.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+- host: my.genome.eu
+  note: >-
+    Customer portal; hosts the documented PSD2 dedicated interface (/psd2/v1/) and the OAuth 2.0
+    authorisation server (/oauth2). Answers 200 with an identical 6,470-byte SPA shell for every
+    path below — treated as a MISS, not a hit.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    result: spa-shell
+- host: pay.genome.eu
+  note: >-
+    Hosted Payment Page and Financial Pixel SDK host. Answers 200 with an identical 2,010-byte SPA
+    shell for every path below — treated as a MISS.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    result: spa-shell
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    result: spa-shell
+- host: gateway.genome.eu
+  note: Legacy gateway host; serves the live field reference at /help/cc. Root returns 403.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+summary:
+  hosts_probed: 7
+  paths_probed: 47
+  documents_served: 0
+  spa_shell_false_positives: 14
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

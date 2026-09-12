@@ -1,0 +1,230 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/ (psd2-api, specifications-for-batch-creation, verification-of-payee-api, sepa-payout-api, host-to-host-api) + https://genome.eu/genome-security/ + the certificate PDFs on cdn.genome.eu
+provider: Genome
+providerId: genome
+description: >-
+  Standards and regulatory regimes the Genome contracts and documentation actually declare, each with
+  the exact page or document that states it. Genome is a European Electronic Money Institution, and
+  most of what it conforms to is named inside the payload specification rather than on a marketing
+  page — which is the useful kind of conformance: a TPP or an ERP that already speaks Berlin Group
+  NextGenPSD2 or ISO 20022 pain.001 integrates with no bespoke connector.
+domain_standards:
+- id: berlin-group-nextgenpsd2
+  name: Berlin Group NextGenPSD2 XS2A Framework
+  conforms: true
+  confidence: high
+  evidence: >-
+    "This API definition is based on the Implementation Guidelines of the Berlin Group PSD2 API. It is
+    not a replacement in any sense. The main specification is (at the moment) always the Implementation
+    Guidelines of the Berlin Group PSD2 API." Genome's PSD2 dedicated interface implements the Berlin
+    Group resource shapes verbatim: /psd2/v1/consents with access/balances/transactions and
+    recurringIndicator, frequencyPerDay, validUntil and combinedServiceIndicator; consentStatus and
+    scaStatus state machines; HAL-style _links with self, startAuthorisation, status and scaRedirect;
+    /psd2/v1/payments/sepa-credit-transfers; /psd2/v1/funds-confirmations.
+  evidence_url: https://developers.genome.eu/psd2-api/
+  surface: https://my.genome.eu/psd2/v1/
+  note: This is the domain-standard signature for Genome's market — read from the contract, not a claim.
+- id: psd2
+  name: Revised Payment Services Directive (EU) 2015/2366 (PSD2)
+  conforms: true
+  confidence: high
+  roles:
+  - ASPSP (Genome, as the account-servicing institution)
+  - serves registered AISPs and PISPs
+  evidence: >-
+    Genome operates a dedicated PSD2 interface open to registered TPPs free of charge, requires an
+    eIDAS QWAC via the Tpp-Qwac-Certificate header, enforces Strong Customer Authentication with a
+    second factor delivered to the account holder, and publishes continuous availability and
+    performance metrics for the dedicated interface.
+  evidence_url: https://developers.genome.eu/psd2-api/
+- id: psd2-rts-sca-csc
+  name: Commission Delegated Regulation (EU) 2018/389 (RTS on SCA and CSC)
+  conforms: true
+  confidence: medium
+  evidence: >-
+    QWAC-based TPP identification (Art. 34), SCA with a dynamic OTP factor (Art. 4), and a published
+    availability/performance surface for the dedicated interface (Art. 32(4)) at
+    https://apimetrics.genome.eu and https://status.genome.eu.
+  evidence_url: https://apimetrics.genome.eu
+- id: iso-20022-pain-001-001-03
+  name: ISO 20022 CustomerCreditTransferInitiationV03 (pain.001.001.03)
+  conforms: true
+  confidence: high
+  evidence: >-
+    "To send SEPA mass transfer you have to create a credit transfer message based on definitions of
+    elements of the message pain.001.001.03 (CustomerCreditTransferInitiationV03) of ISO20022 XML
+    standard", with the literal namespace urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 and the
+    Group Header / Payment Information / Transaction Information structure.
+  evidence_url: https://developers.genome.eu/specifications-for-batch-creation/
+- id: iso-20022-external-code-set
+  name: ISO 20022 External Code Set — ExternalOrganisationIdentification1Code
+  conforms: true
+  confidence: high
+  evidence: >-
+    The Verification of Payee request parameter payee_scheme_name_code is constrained to the ISO 20022
+    External Organisation Identification code set — BANK, CBID, CHID, CINC, COID, CUST, DUNS, EMPL,
+    GS1G, SREN, SRET, TXID, BDID, BOID — and the documentation names the code set explicitly.
+  evidence_url: https://developers.genome.eu/verification-of-payee-api/
+- id: verification-of-payee
+  name: Verification of Payee (EPC VOP scheme / Instant Payments Regulation (EU) 2024/886)
+  conforms: true
+  confidence: high
+  evidence: >-
+    Genome exposes a dedicated VoP endpoint at https://api.genome.eu/api/mp/payee/verification whose
+    response carries scheme "vop" and the four scheme-defined matching outcomes — match, close match,
+    no match, no applicable — plus payee_suggested_name on a close match, which is the EPC VOP
+    response model.
+  evidence_url: https://developers.genome.eu/verification-of-payee-api/
+- id: iso-17442-lei
+  name: ISO 17442 Legal Entity Identifier
+  conforms: true
+  confidence: high
+  evidence: >-
+    payee_company_code is documented as an "alpha-numeric code based on the ISO 17442 Financial
+    services — Legal entity identifier (LEI)".
+  evidence_url: https://developers.genome.eu/verification-of-payee-api/
+- id: sepa-sct-inst
+  name: SEPA Credit Transfer and SEPA Instant Credit Transfer
+  conforms: true
+  confidence: high
+  evidence: >-
+    The SEPA Payout API takes receiver_iban / receiver_bic / transfer_description (140 chars, the SCT
+    remittance-information limit); webhook transaction_type values include sepa_incoming and
+    sepa_instant_incoming; the PSD2 payment product is sepa-credit-transfers.
+  evidence_url: https://developers.genome.eu/sepa-payout-api/
+- id: dora
+  name: Digital Operational Resilience Act (EU) 2022/2554
+  conforms: claimed
+  confidence: medium
+  evidence: >-
+    "Our compliance efforts confirm our commitment to information security, privacy, and operational
+    resilience, in line with the EU's Digital Operational Resilience Act (DORA)." This is a prose claim
+    on Genome's security page, not a contract signature, and is recorded as claimed rather than verified.
+  evidence_url: https://genome.eu/genome-security/
+cross_cutting:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749) authorization code grant
+  conforms: true
+  evidence: >-
+    /oauth2/authorize with client_id, redirect_uri, response_type=code and state; /oauth2/token with
+    grant_type=authorization_code and HTTP Basic client authentication; bearer access token with
+    expires_in and scope.
+  evidence_url: https://developers.genome.eu/psd2-api/
+- id: oauth2-discovery
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: false
+  evidence: >-
+    /.well-known/oauth-authorization-server on my.genome.eu returns the single-page-app HTML shell, not
+    a metadata document (probed 2026-09-12). Endpoints must be read from prose.
+  evidence_url: https://my.genome.eu/.well-known/oauth-authorization-server
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: No /.well-known/openid-configuration on any Genome host (probed 2026-09-12).
+  evidence_url: https://my.genome.eu/.well-known/openid-configuration
+- id: rfc9457
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    Errors are returned as a proprietary {code, message, status, session_id} envelope with HTTP 200,
+    not application/problem+json. Confirmed on a live probe 2026-09-12.
+  evidence_url: https://developers.genome.eu/list-of-response-codes/
+- id: http-status-semantics
+  name: HTTP status code semantics (RFC 9110)
+  conforms: false
+  evidence: >-
+    Rejected, malformed and declined requests all return HTTP 200 with the outcome in the body. Probed
+    2026-09-12 against https://api.genome.eu/api/pf/host-to-host.
+  evidence_url: https://developers.genome.eu/list-of-response-codes/
+- id: idempotency
+  name: Idempotent request replay
+  conforms: partial
+  evidence: >-
+    transaction_unique_id is enforced for uniqueness (error 3001 on reuse) but a replay returns an
+    error rather than the original response, and read surfaces are not covered. See
+    conventions/genome-conventions.yml idempotency.coverage.
+  evidence_url: https://developers.genome.eu/merchants/host-to-host-api/
+- id: pagination
+  name: Paginated collection reads
+  conforms: true
+  evidence: Query on Demand accepts page (1-12) and limit (1-1000, default 1000) with asc/desc ordering.
+  evidence_url: https://developers.genome.eu/merchants/query-on-demand-api/
+- id: rfc9116
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 or an SPA shell on all seven Genome hosts (probed 2026-09-12).
+  evidence_url: https://genome.eu/.well-known/security.txt
+- id: rfc7519
+  name: JSON Web Token (RFC 7519) / JWS HS256
+  conforms: true
+  evidence: Hosted Payment Page sessions are initiated with an HS256 JWT carrying iss/sub/iat/exp/jti.
+  evidence_url: https://developers.genome.eu/merchants/hosted-payment-page/
+- id: rfc3339
+  name: RFC 3339 timestamps
+  conforms: partial
+  evidence: >-
+    Webhook payloads use RFC 3339 (created_at, booked_at, processed_at); API responses and Query on
+    Demand filters use unix epoch integers instead.
+  evidence_url: https://developers.genome.eu/webhooks/
+- id: 3d-secure
+  name: EMV 3-D Secure cardholder authentication
+  conforms: true
+  evidence: >-
+    AUTH3D and SALE3D transaction types initiate the 3DS flow, and Genome publishes the Visa and
+    Mastercard ECI value mapping it returns to the merchant.
+  evidence_url: https://developers.genome.eu/merchants/host-to-host-api/
+- id: iso4217
+  name: ISO 4217 currency codes
+  conforms: true
+  evidence: currency is string(3) ISO 4217 alpha-3; XTS is used as the reserved test currency.
+  evidence_url: https://developers.genome.eu/merchants/host-to-host-api/
+- id: iso3166
+  name: ISO 3166-1 alpha-3 country codes
+  conforms: true
+  evidence: receiver_country and country are documented as ISO 3166-1 alpha-3.
+  evidence_url: https://developers.genome.eu/sepa-payout-api/
+- id: luhn
+  name: Luhn check digit (ISO/IEC 7812-1)
+  conforms: true
+  evidence: card_number is validated as 13-19 digits with the Luhn algorithm.
+  evidence_url: https://gateway.genome.eu/help/cc
+certifications:
+- id: iso-27001
+  name: ISO/IEC 27001:2022 Information Security Management
+  conforms: true
+  certificate_holder: Maneuver LT, UAB — Zalgirio g. 92-710, LT-09303 Vilnius, Lithuania
+  scope: Provision of electronic money and payment services
+  certification_body: TUV NORD CERT GmbH
+  registration_no: 44 121 24 32 0215
+  valid_from: '2024-12-20'
+  valid_until: '2027-12-19'
+  evidence: https://cdn.genome.eu/certificate_27001_f47cad0aca.pdf
+  evidence_url: https://genome.eu/genome-security/
+- id: iso-27701
+  name: ISO/IEC 27701:2019 Privacy Information Management
+  conforms: true
+  certificate_holder: Maneuver LT, UAB
+  scope: Provision of electronic money and payment services; the organisation acts as PII controller and PII processor
+  certification_body: TUV CYPRUS LTD
+  registration_no: '49254012501'
+  valid_from: '2025-02-14'
+  valid_until: '2028-02-13'
+  evidence: https://cdn.genome.eu/certificate_27701_b2b0eb0698.pdf
+  evidence_url: https://genome.eu/genome-security/
+- id: pci-dss
+  name: PCI DSS
+  conforms: claimed
+  evidence: >-
+    Genome states its team "works with PCI DSS-aligned standards" and displays a PCI badge, but
+    publishes no Attestation of Compliance and names no assessor or level. Recorded as claimed, not
+    verified — "aligned" is the company's own wording.
+  evidence_url: https://genome.eu/genome-security/
+summary:
+  domain_standards_declared: 10
+  cross_cutting_checked: 15
+  certifications_verified: 2
+  certifications_claimed: 1
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

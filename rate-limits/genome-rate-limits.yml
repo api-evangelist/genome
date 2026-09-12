@@ -3,87 +3,75 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Genome
 providerId: genome
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/ (all 14 documentation pages) + live probe of https://api.genome.eu/api/pf/host-to-host on 2026-09-12
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-12'
 tags:
-  - Finance
-  - Payments
-  - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Genome API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
+- Finance
+- Payments
+- Rate Limiting
+description: >-
+  Genome publishes NO rate limits. This file replaces a 2026-05-04 bulk-sweep scaffold that invented
+  free/professional/enterprise tiers at 10/100/1000 requests per minute and an X-RateLimit-* header
+  set — none of which Genome documents or returns. limit_count is 0 because an honest zero is the
+  measurement.
+limit_count: 0
+limits: []
+documented: false
+searched:
+  pages:
+  - https://developers.genome.eu/merchants/host-to-host-api/
+  - https://developers.genome.eu/merchants/payout-api/
+  - https://developers.genome.eu/merchants/query-on-demand-api/
+  - https://developers.genome.eu/merchants/hosted-payment-page/
+  - https://developers.genome.eu/merchants/web-sdk-integration/
+  - https://developers.genome.eu/merchants/ready-to-go-libraries/
+  - https://developers.genome.eu/sepa-payout-api/
+  - https://developers.genome.eu/verification-of-payee-api/
+  - https://developers.genome.eu/specifications-for-batch-creation/
+  - https://developers.genome.eu/webhooks/
+  - https://developers.genome.eu/psd2-api/
+  - https://developers.genome.eu/list-of-response-codes/
+  result: no throttling policy, no quota and no limit of any kind is stated on any page.
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  limit: null
+  remaining: null
+  reset: null
+  retryAfter: null
+  policy: null
+  probed: '2026-09-12'
+  probe_url: https://api.genome.eu/api/pf/host-to-host
+  probe_method: POST
+  probe_result: >-
+    HTTP 200. Response headers were date, content-type, content-length, server, x-itc-executiontype,
+    x-itc-rayid, x-itc-api, x-itc-code, cache-control and pragma. No X-RateLimit-*, no RateLimit-*, no
+    Retry-After.
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Genome
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Genome
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Genome
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Genome
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Genome
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  throttled: null
+  note: >-
+    No 429 is documented and the API does not use HTTP status codes for application outcomes anyway.
+    The response-code registry contains no throttling code; the closest adjacent controls are 2007
+    (amount below or above restrictions), 3126 (withdrawal frequency limit exceeded, an issuer-side
+    control) and 3202 (volume limit exceeded, an anti-fraud control) — none of them is an API rate limit.
+adjacent_controls:
+- code: 2008
+  name: Access from this IP-address is not available
+  note: >-
+    A source-IP allowlist gates the merchant-platform endpoints. Observed live on 2026-09-12 against
+    https://api.genome.eu/api/mp/payout. This is access control, not rate limiting.
+- code: 3202
+  name: Volume limit exceeded
+  note: Anti-fraud volume control on payments, not on API calls.
+- code: 3126
+  name: Withdrawal frequency limit exceeded
+  note: Issuer-side control surfaced through the decline band.
+consumer_impact: >-
+  With no published limit and no runtime signal, a client has nothing to back off against. An
+  autonomous caller cannot distinguish "slow down" from "broken", and the only safe strategy is a
+  conservative self-imposed ceiling plus the CHECK-on-unknown rule in
+  conventions/genome-conventions.yml.
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

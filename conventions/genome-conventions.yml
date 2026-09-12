@@ -1,0 +1,219 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/ (host-to-host-api, payout-api, qod, sepa-payout-api, webhooks, hosted-payment-page, list-of-response-codes) + live probes of api.genome.eu 2026-09-12
+provider: Genome
+providerId: genome
+description: >-
+  Cross-cutting runtime semantics for the Genome merchant APIs — how a caller authenticates, retries,
+  paginates, traces, versions, reads errors and undoes a write. Derived from the published
+  documentation and confirmed where possible against live unauthenticated responses.
+auth:
+  style: credentials-in-body
+  summary: >-
+    merchant_account and merchant_password travel as ordinary request FIELDS, not headers. PSD2 is the
+    one OAuth 2.0 surface; the Hosted Payment Page uses an HS256 JWT whose key is the SHA-256 digest of
+    the page secret.
+  detail: authentication/genome-authentication.yml
+content_types:
+  request:
+  - application/x-www-form-urlencoded
+  - application/json
+  response:
+  - application/json
+  note: >-
+    Every merchant endpoint accepts both a urlencoded key=value body and a JSON object; the response is
+    JSON in either case. Callbacks to the merchant go out as application/json (webhooks) or
+    application/x-www-form-urlencoded (Host-to-Host and SEPA Payout transaction callbacks) — two
+    different shapes for two different notification channels, which a merchant has to handle separately.
+versioning:
+  style: in-body-parameter
+  parameter: api_version
+  current: 1
+  header: none
+  url_versioning: PSD2 only (/psd2/v1/...)
+  unsupported_version_code: 1005 (Unsupported API version); 5001 for the Query on Demand surface
+  note: >-
+    The merchant APIs are versioned by a float field inside the request payload rather than by path or
+    header. Only version 1 is documented. The PSD2 dedicated interface is the exception and carries a
+    /v1/ path segment, per the Berlin Group implementation guidelines.
+idempotency:
+  coverage: partial
+  mechanism: caller-supplied unique transaction identifier enforced as a uniqueness constraint
+  key_field: transaction_unique_id
+  key_format: string, 1-45 characters (11-45 on the Host-to-Host AUTH flow)
+  header: none
+  scope:
+  - processTransaction (POST /api/pf/host-to-host — AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK)
+  - initPayout (POST /api/pf/payout)
+  - SEPA payout init (POST /api/mp/payout)
+  retention: not documented
+  replay_behaviour: reject
+  replay_code: 3001 (Transaction ID/Order ID is already used)
+  why_partial: >-
+    This is duplicate PREVENTION, not idempotent replay. Re-sending a request with a
+    transaction_unique_id that has already been used returns error 3001 — it does NOT return the
+    original response. A caller that loses the first response cannot recover it by repeating the call;
+    it must issue a separate CHECK request against the reference. The mechanism also does not cover the
+    read surfaces (Query on Demand, CHECK, Verification of Payee), and no retention window is published,
+    so a caller cannot know how long a key stays reserved. It is scoped and lossy, so it is recorded as
+    partial rather than full.
+  agent_guidance: >-
+    Generate transaction_unique_id before the first attempt and persist it. On any timeout or on codes
+    1, 2, 3, 10, 11, 12, 1003, 3109, 3117, 3118, 3124, 3125, 3133, 6000, 7000, 7101, 7102 or 7103, send
+    a CHECK transaction request — never re-send the payment.
+reversibility:
+  grade: verified
+  summary: >-
+    Every card write has a documented reversal path and Genome states the window for the one that has
+    a clock on it.
+  operations:
+  - write: AUTH (hold funds on the cardholder account)
+    operationId: processTransaction
+    reversal: VOID
+    reversal_operationId: processTransaction
+    window: >-
+      Until the authorization is settled or voided. Genome states the hold lasts 7 days (dependent on
+      the acquirer) after which Genome automatically voids it; the period can change under card-scheme
+      regulation.
+    window_source: https://developers.genome.eu/merchants/host-to-host-api/
+    note: >-
+      A voided transaction never reaches the acquirer and does not appear on the cardholder's statement.
+      Error 3007 (Illegal interval between AUTH and SETTLE/VOID) is returned outside the permitted
+      interval; error 3008 if it was already voided.
+  - write: SETTLE (capture a previously authorized transaction)
+    operationId: processTransaction
+    reversal: REFUND
+    reversal_operationId: processTransaction
+    window: >-
+      Not stated. Genome documents that a settled transaction can be refunded in part or in full but
+      publishes no time limit; error 3108 (not possible to issue refund due to bank limit) and 3115
+      (refund not possible by bank) are the acquirer-side boundaries.
+    window_source: https://developers.genome.eu/merchants/host-to-host-api/
+    note: >-
+      A given transaction cannot be refunded more than once (error 3009 if already refunded); partial
+      refunds are supported but the surface exposes no way to enumerate remaining refundable amount.
+  - write: SALE / SALE3D (authorize and capture in one call)
+    operationId: processTransaction
+    reversal: REFUND
+    reversal_operationId: processTransaction
+    window: >-
+      Not stated. Genome states plainly that after a successful SALE the transaction can only be
+      refunded by the merchant or charged back by the issuing bank — VOID is not available.
+    window_source: https://developers.genome.eu/merchants/host-to-host-api/
+  - write: initPayout (send funds to a card)
+    operationId: initPayout
+    reversal: none
+    window: null
+    note: >-
+      NO REVERSAL EXISTS. A card payout is irreversible once accepted; the only recourse documented is
+      a payout-band error (3300-3330) at submission time. An agent must treat initPayout as a one-way
+      door and gate it behind human approval.
+  - write: SEPA payout init (POST /api/mp/payout)
+    reversal: none
+    window: null
+    note: >-
+      No cancel, recall or reversal endpoint is published for SEPA payouts. The documented lifecycle is
+      pending -> callback with SUCCESS / DECLINED / ERROR / FRAUDED, with no merchant-initiated exit.
+  read_only_surfaces:
+  - Query on Demand API
+  - CHECK transaction
+  - Verification of Payee API
+  - PSD2 Account Information Services
+dry_run_mode:
+  supported: true
+  mechanism: >-
+    Test transactions are separated by CURRENCY, not by key or environment. Submitting XTS (the ISO 4217
+    code reserved for testing) puts the call in test mode on the live host, and Genome states this works
+    even on an approved LIVE merchant account.
+  detail: sandbox/genome-sandbox.yml
+  caveat: >-
+    Because the discriminator is a payload field on the production host, a currency bug is a real-money
+    bug. There is no separate sandbox hostname and no test-vs-live key prefix to fail safe on.
+pagination:
+  style: page-and-limit
+  applies_to:
+  - Query on Demand API (POST /api/pf/qod)
+  parameters:
+  - name: page
+    type: string (1-12)
+    default: '1'
+  - name: limit
+    type: string (1-1000)
+    default: '1000'
+    max: 1000
+  - name: order
+    type: string
+    values: [asc, desc]
+    default: asc
+  cursor: none
+  total_count_field: not documented
+  note: >-
+    Offset pagination with no total-count field and no next-page link, so a caller cannot tell whether
+    another page exists except by requesting it and seeing fewer than `limit` rows. The window is bounded
+    by time_from / time_to unix timestamps, and error 5002 is returned when those are out of order.
+filtering:
+  style: required-time-window
+  parameters: [time_from, time_to, qod_type]
+  qod_type_values: [transactions, chargebacks]
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: true
+  mechanism: >-
+    The Host-to-Host surface documents custom parameters, and the Hosted Payment Page JWT forwards any
+    custom_* claim into the callback payload.
+request_id_tracing:
+  request_header: none supplied by the caller on the merchant surface
+  psd2_request_header: X-Request-ID (mandatory on every PSD2 call)
+  response_field: session_id (sessionid on the Host-to-Host surface)
+  response_header: x-itc-rayid
+  note: >-
+    Observed live 2026-09-12. Genome's own documentation says to quote the request identifier to support
+    on any issue. The merchant surface gives the caller no way to SET a correlation id — it can only read
+    the one Genome assigns — which means a client-side trace has to be joined after the fact.
+error_envelope:
+  shape: proprietary
+  rfc9457: false
+  http_status_used: false
+  http_status_on_error: 200
+  code_field: code
+  message_field: message
+  success_value: 0
+  catalog: errors/genome-error-codes.yml
+  declines: errors/genome-decline-codes.yml
+  note: >-
+    This is the single sharpest edge in the API for an autonomous caller: the HTTP layer says 200 for
+    a rejected, declined or malformed request. Any client that branches on response.ok is wrong.
+rate_limit_signaling:
+  documented_limits: false
+  response_headers: none
+  probed: >-
+    A live POST to https://api.genome.eu/api/pf/host-to-host on 2026-09-12 returned no X-RateLimit-*,
+    no RateLimit-*, and no Retry-After header. Genome publishes no throttling policy.
+  exhaustion_status: not documented
+  detail: rate-limits/genome-rate-limits.yml
+webhook_conventions:
+  detail: asyncapi/genome-webhooks.yml
+  ack_requirement: HTTP 200 (Host-to-Host and SEPA Payout callbacks additionally expect the body text "OK")
+  retry: exponential backoff, up to a per-customer attemptMax
+  at_least_once: >-
+    Genome states explicitly that the same event can be resent multiple times for a single transaction,
+    so a merchant receiver must be idempotent on transaction_id.
+timestamps:
+  transport: RFC 3339 strings in webhook payloads; unix epoch integers in API responses and QoD filters
+currencies: ISO 4217 alpha-3; XTS reserved for test
+countries: ISO 3166-1 alpha-3
+card_validation: Luhn algorithm on card_number, 13-19 digits
+cross_links:
+  authentication: authentication/genome-authentication.yml
+  errors: errors/genome-error-codes.yml
+  declines: errors/genome-decline-codes.yml
+  lifecycle: lifecycle/genome-lifecycle.yml
+  rate_limits: rate-limits/genome-rate-limits.yml
+  sandbox: sandbox/genome-sandbox.yml
+  conformance: conformance/genome-conformance.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

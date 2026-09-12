@@ -1,0 +1,199 @@
+generated: '2026-09-12'
+method: derived
+source: openapi/_original/genome-openapi.yml + https://developers.genome.eu/ (host-to-host-api, payout-api, query-on-demand-api, sepa-payout-api, verification-of-payee-api, webhooks, psd2-api)
+provider: Genome
+providerId: genome
+description: >-
+  Entity-relationship view of the Genome payment domain, derived from the schemas in the harvested
+  OpenAPI and extended with the entities the documentation defines but the spec does not model (the
+  Query on Demand transaction record, the SEPA payout, the VoP verification, the webhook notification
+  and the PSD2 consent/account/payment triple).
+identifiers:
+  note: >-
+    Genome uses no typed id prefixes. Every identifier is either an opaque string or a bare integer,
+    which means an id carries no information about what it addresses — a caller cannot tell a
+    reference from a token from a session id by looking at it.
+  kinds:
+  - id: transaction_unique_id
+    owner: merchant
+    format: string 1-45 (11-45 on Host-to-Host AUTH)
+    role: the caller's idempotency/uniqueness key; reused values are rejected with code 3001
+  - id: reference
+    owner: Genome
+    format: string(20)
+    role: the durable handle for a transaction; required to SETTLE, VOID, REFUND or CHECK it
+  - id: base_reference
+    owner: Genome
+    format: string(20), nullable
+    role: points a child transaction (SETTLE/REFUND/VOID) at the transaction it derives from
+  - id: token
+    owner: Genome
+    format: string(36) UUID-shaped
+    role: tokenized card; "hashed value of card number, expiry date and cardholder name"
+  - id: session_id / sessionid
+    owner: Genome
+    format: string, up to 36
+    role: per-request trace handle, not a resource identifier
+  - id: transaction_id
+    owner: Genome
+    format: uint64
+    role: the ledger-side transaction id used in webhook payloads (distinct from `reference`)
+  - id: wallet_id / account_id
+    owner: Genome
+    format: uint64
+    role: participant identifiers in webhook sender/receiver blocks
+  - id: consentId / paymentId / authorisationId
+    owner: Genome
+    format: string
+    role: PSD2 resources, per the Berlin Group model
+entities:
+- name: Merchant
+  description: The API caller, identified by merchant_account and authenticated by merchant_password.
+  source: docs
+  fields: [merchant_account, merchant_password]
+  relationships:
+  - has_many: Transaction
+    via: merchant_account
+  - has_many: Payout
+    via: merchant_account
+  - has_many: MerchantAccount (MID)
+    via: mid_reference
+- name: HostToHostRequest
+  description: A card transaction instruction. One schema carries eight transaction types.
+  source: openapi/_original/genome-openapi.yml#/components/schemas/HostToHostRequest
+  discriminator: transaction_type
+  discriminator_values: [AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK]
+  fields: [api_version, merchant_account, merchant_password, transaction_type, transaction_unique_id, amount, currency, callback_url, user_id, user_email, user_ip, card]
+  relationships:
+  - has_one: CardData
+    via: card
+  - belongs_to: Transaction
+    via: base_reference
+    note: SETTLE, REFUND and VOID all address a prior transaction by its reference.
+- name: CardData
+  description: Full card data or a tokenized card. Exactly one of card_number or card_token is used.
+  source: openapi/_original/genome-openapi.yml#/components/schemas/CardData
+  fields: [card_number, card_exp_month, card_exp_year, card_cvv, card_holder, card_token]
+  pii: true
+  note: Luhn-validated, 13-19 digits. Merchants are told not to store card data on their own servers.
+- name: TransactionResponse
+  description: Synchronous response to a Host-to-Host call.
+  source: openapi/_original/genome-openapi.yml#/components/schemas/TransactionResponse
+  fields: [sessionid, timestamp, status, code, message, redirect_url]
+  note: redirect_url is present only on 3DS flows (AUTH3D / SALE3D).
+- name: Transaction
+  description: >-
+    The durable record of a card transaction, surfaced by the Query on Demand API and by the CHECK
+    transaction type. Not modelled in the OpenAPI.
+  source: https://developers.genome.eu/merchants/query-on-demand-api/
+  fields: [transaction_type, status, mode, reference, base_reference, amount, currency]
+  status_values: [SUCCESS, DECLINED, ERROR, MALFORMED, FRAUDED, CHARGEDBACK, REFUNDED, VOIDED, PARTIAL-REFUNDED, WRONGREF]
+  mode_values: [CC, TOKEN, REF, CASCADE]
+  relationships:
+  - belongs_to: Transaction
+    via: base_reference
+    note: Self-referential — a SETTLE, REFUND or VOID points back at its parent AUTH or SALE.
+  - has_many: Callback
+    via: reference
+- name: Chargeback
+  description: Issuer-initiated reversal, retrievable through Query on Demand with qod_type=chargebacks.
+  source: https://developers.genome.eu/merchants/query-on-demand-api/
+  relationships:
+  - belongs_to: Transaction
+    via: reference
+- name: PayoutRequest
+  description: Instruction to send funds to a cardholder, by full card data or by token.
+  source: openapi/_original/genome-openapi.yml#/components/schemas/PayoutRequest
+  fields: [api_version, merchant_account, merchant_password, method, transaction_unique_id, amount, currency, callback_url, user_id, user_email, card]
+  relationships:
+  - has_one: CardData
+    via: card
+  - has_one: PayoutResponse
+    via: transaction_unique_id
+- name: PayoutResponse
+  source: openapi/_original/genome-openapi.yml#/components/schemas/PayoutResponse
+  fields: [sessionid, timestamp, status, code, message]
+- name: SepaPayout
+  description: >-
+    SEPA credit transfer payout. Shares the payout verb but not the request shape — it takes an IBAN,
+    a BIC and a structured receiver address instead of card data.
+  source: https://developers.genome.eu/sepa-payout-api/
+  fields: [api_version, method, transaction_unique_id, amount, currency, callback_url, type, receiver_iban, receiver_type, receiver_code, receiver_name, receiver_bic, transfer_description, receiver_city, receiver_country, receiver_zip, receiver_street, receiver_building_number, receiver_apartment]
+  status_values: [SUCCESS, ERROR, DECLINED, PENDING, FRAUDED]
+  relationships:
+  - has_one: Callback
+    via: transaction_unique_id
+- name: PayeeVerification
+  description: Verification of Payee check against a SEPA beneficiary before a transfer is sent.
+  source: https://developers.genome.eu/verification-of-payee-api/
+  fields: [payee_type, payee_account_number, payee_name, payee_company_code, payee_company_bic, payee_identification, payee_scheme_name_code, payee_scheme_name_proprietary, payee_issuer]
+  response_fields: [id, scheme, status, session_id, timestamp, code, message, matching_result, payee_suggested_name, request]
+  matching_results: [match, close match, no match, no applicable]
+  relationships:
+  - precedes: SepaPayout
+    note: >-
+      No field links a verification to the payout that follows it — the merchant has to carry the
+      association itself. On "close match" the caller is told to use payee_suggested_name in the payment.
+- name: Callback
+  description: Server-to-server notification carrying the final outcome of an asynchronous operation.
+  source: asyncapi/genome-webhooks.yml
+  fields: [token, reference, transaction_unique_id, status, code, message, checkSum]
+  relationships:
+  - belongs_to: Transaction
+    via: reference
+- name: IncomingPaymentNotification
+  description: Ledger-level webhook for credit transactions on the account.
+  source: https://developers.genome.eu/webhooks/
+  fields: [transaction_id, transaction_type, transaction_status, created_at, booked_at, processed_at, amount, description, error, sender, receiver, reference, bulk_id, payment_id]
+  relationships:
+  - has_one: Participant
+    via: sender
+  - has_one: Participant
+    via: receiver
+  - belongs_to: Bulk
+    via: bulk_id
+- name: Participant
+  description: Sender or receiver block on an incoming payment notification.
+  fields: [wallet_id, account_id, iban, bic, name]
+  pii: true
+- name: Bulk
+  description: A mass-transfer batch, submitted as ISO 20022 pain.001.001.03 XML or as CSV.
+  source: https://developers.genome.eu/specifications-for-batch-creation/
+  relationships:
+  - has_many: IncomingPaymentNotification
+    via: bulk_id
+- name: Psd2Consent
+  description: Berlin Group AIS consent resource.
+  source: https://developers.genome.eu/psd2-api/
+  fields: [access, combinedServiceIndicator, frequencyPerDay, recurringIndicator, validUntil, consentStatus, consentId]
+  relationships:
+  - has_many: Psd2Authorisation
+    via: authorisationId
+  - grants_access_to: Psd2Account
+- name: Psd2Account
+  source: https://developers.genome.eu/psd2-api/
+  fields: [resourceId, iban, currency, cashAccountType, status, bic, usage, balances]
+  relationships:
+  - has_many: Psd2Balance
+    via: balances
+  - has_many: Psd2Transaction
+    via: _links.transactions
+- name: Psd2Payment
+  description: SEPA credit transfer initiated through the PISP surface.
+  source: https://developers.genome.eu/psd2-api/
+  fields: [paymentId, transactionStatus]
+  relationships:
+  - has_many: Psd2Authorisation
+    via: authorisationId
+relationship_summary:
+  self_referential: Transaction -> Transaction via base_reference
+  weakest_link: >-
+    PayeeVerification has no foreign key into SepaPayout even though the whole point of a VoP check is
+    to gate the payout that follows it. The join is the merchant's problem.
+  split_identity: >-
+    The same card transaction is addressed by `reference` (string 20) on the gateway surface and by
+    `transaction_id` (uint64) on the webhook surface, with nothing published that maps one to the other.
+render: none
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

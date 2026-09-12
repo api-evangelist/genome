@@ -1,0 +1,71 @@
+generated: '2026-09-12'
+method: derived
+source: openapi/genome-host-to-host-api-openapi.yml + openapi/genome-payouts-api-openapi.yml + https://developers.genome.eu/
+provider: Genome
+providerId: genome
+status: candidate
+description: >-
+  Genome ships no MCP server. This is a CANDIDATE tool surface derived from the two OpenAPI operations
+  in this repository and the transaction types those operations dispatch on. Nothing here is
+  callable — no endpoint exists, and none was guessed.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: searched
+  note: >-
+    Searched Genome's documentation site (all 14 pages in its sitemap), genome.eu, the genome-eu GitHub
+    organisation (14 public repositories), npm and PyPI on 2026-09-12. No hosted MCP endpoint, no stdio
+    package, no mcp.json, no /.well-known/mcp. The auth value records what an MCP server WOULD need if
+    one existed — merchant_account and merchant_password, which travel in the request body rather than
+    a header.
+tools:
+- name: genome_process_card_transaction
+  description: >-
+    Process a card transaction. The transaction_type field selects the behaviour: AUTH (hold funds),
+    AUTH3D (hold with 3-D Secure), SALE (authorize and capture), SALE3D (capture with 3-D Secure),
+    SETTLE (capture a prior AUTH), REFUND (return a settled amount), VOID (cancel before settlement),
+    CHECK (read the status of a prior transaction).
+  rest: processTransaction
+  method: POST
+  path: /api/pf/host-to-host
+  consequence: write
+  input_schema_source: openapi/genome-host-to-host-api-openapi.yml#/components/schemas/HostToHostRequest
+  note: >-
+    One OpenAPI operation covers eight distinct actions with wildly different consequences, from a
+    read-only CHECK to an irreversible capture. A real MCP server should split this into eight tools so
+    an agent's tool permissions can distinguish them; collapsing them into one tool means granting
+    REFUND access grants SALE access.
+- name: genome_init_card_payout
+  description: Send funds to a cardholder, using full card data or a tokenized card.
+  rest: initPayout
+  method: POST
+  path: /api/pf/payout
+  consequence: irreversible-write
+  input_schema_source: openapi/genome-payouts-api-openapi.yml#/components/schemas/PayoutRequest
+  note: >-
+    No reversal operation exists for a card payout (see conventions/genome-conventions.yml
+    reversibility). Any MCP exposure of this tool must be gated behind human approval.
+not_derivable:
+- surface: SEPA Payout API (POST /api/mp/payout)
+  reason: Documented at https://developers.genome.eu/sepa-payout-api/ but not present in any OpenAPI in this repository.
+- surface: Query on Demand API (POST /api/pf/qod)
+  reason: Documented but not in any OpenAPI; this is the read surface an agent would most want.
+- surface: Verification of Payee API (POST /api/mp/payee/verification)
+  reason: Documented but not in any OpenAPI.
+- surface: CHECK transaction (POST /api/mp/transaction)
+  reason: Documented but not in any OpenAPI.
+- surface: PSD2 dedicated interface (/psd2/v1/*)
+  reason: >-
+    Documented but not in any OpenAPI, and gated behind eIDAS QWAC plus TPP registration — not an
+    agent-reachable surface regardless.
+agent_readiness_blockers:
+- Errors and declines return HTTP 200; an agent must branch on the envelope code, not the status.
+- No rate-limit headers and no published limits, so an agent has no backoff signal.
+- Credentials travel in the request body, so a tool call cannot hide them in a header the runtime strips.
+- transaction_unique_id prevents duplicates but does not replay — a lost response needs a CHECK, not a retry.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

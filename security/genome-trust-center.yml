@@ -1,0 +1,81 @@
+generated: '2026-09-12'
+method: searched
+source: https://genome.eu/genome-security/ + the certificate PDFs it links on cdn.genome.eu
+provider: Genome
+providerId: genome
+trust_center:
+  url: https://genome.eu/genome-security/
+  probed: '2026-09-12'
+  http_status: 200
+  dedicated_portal: false
+  note: >-
+    Genome has no trust portal in the Vanta/Drata sense — no document request flow, no subprocessor
+    list, no live control status. What it has is better than a badge wall and worse than a portal: the
+    two ISO certificates are published as downloadable PDFs that name the certifying body, the
+    registration number and the validity window, so a buyer can verify them against the registrar
+    without asking anyone.
+certifications:
+- name: ISO/IEC 27001:2022
+  status: certified
+  holder: Maneuver LT, UAB
+  scope: Provision of electronic money and payment services
+  statement_of_applicability: v1.3, dated 2024-10-24
+  body: TUV NORD CERT GmbH
+  registration_no: 44 121 24 32 0215
+  audit_report_no: 35924 2167
+  valid_from: '2024-12-20'
+  valid_until: '2027-12-19'
+  initial_certification: '2024'
+  document: https://cdn.genome.eu/certificate_27001_f47cad0aca.pdf
+- name: ISO/IEC 27701:2019
+  status: certified
+  holder: Maneuver LT, UAB
+  scope: >-
+    Provision of electronic money and payment services; the organisation acts as PII controller and
+    PII processor. Valid only in conjunction with the ISO/IEC 27001 certificate above.
+  statement_of_applicability: v1.3, dated 2024-10-24
+  body: TUV CYPRUS LTD
+  registration_no: '49254012501'
+  audit_report_no: '05022025'
+  valid_from: '2025-02-14'
+  valid_until: '2028-02-13'
+  initial_certification: '2025'
+  document: https://cdn.genome.eu/certificate_27701_b2b0eb0698.pdf
+- name: PCI DSS
+  status: claimed
+  note: >-
+    "Our team works with PCI DSS-aligned standards." No AoC, level or assessor is published. Genome
+    also displays a PCI logotype on the security page. Treated as a claim, not a certification.
+regulatory:
+  entity: UAB "Maneuver LT"
+  licence: Electronic Money Institution
+  supervisor: Bank of Lithuania (Lietuvos bankas)
+  supervisor_url: https://www.lb.lt
+  source: https://genome.eu/legal-regulations/
+  frameworks_named:
+  - DORA (Digital Operational Resilience Act)
+  - PSD2
+  - GDPR (via the ISO/IEC 27701 PIMS scope and https://genome.eu/privacy-notice/)
+security_practices_published:
+- Two-factor authentication on transfers
+- Strong Customer Authentication on online card payments
+- Encryption and tokenization of card data
+- Transaction monitoring
+- Real-time transaction visibility and in-app card controls
+fraud_reporting:
+  email: fraud@genome.eu
+  alternate: support@genome.eu
+  note: >-
+    This is an ACCOUNT fraud channel for customers, not a vulnerability disclosure channel for
+    researchers — Genome's instruction is to block the card or account in the app first and then write.
+vulnerability_disclosure:
+  program: none found
+  security_txt: absent on all seven hosts (probed 2026-09-12)
+  bug_bounty: none found on HackerOne, Bugcrowd or Intigriti
+  policy_page: none found
+  note: >-
+    A researcher who finds a flaw in a licensed EMI has no published route in. No Security pointer is
+    wired into apis.yml, because there is nothing to point at.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

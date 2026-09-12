@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Genome Payments Host-to-Host API
+  title: Genome Payments Host To Host API
   description: 'Genome merchant payments API. Includes the Payout API for sending funds to
 
     cardholders (full card or tokenized card) and the Host-to-Host API for
@@ -88,15 +88,6 @@ components:
         redirect_url:
           type: string
           description: Present for 3DS flows
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        code:
-          type: integer
-        message:
-          type: string
     HostToHostRequest:
       type: object
       required:
@@ -155,3 +146,12 @@ components:
               type: string
             card_token:
               type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string

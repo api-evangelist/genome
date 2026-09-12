@@ -1,0 +1,57 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Genome Payouts API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-12'
+  method: generated
+  source: https://developers.genome.eu/merchants/payout-api/ + https://developers.genome.eu/list-of-response-codes/ + live probe of https://api.genome.eu/api/pf/payout on 2026-09-12
+  extends: openapi/genome-payouts-api-openapi.yml
+  note: Non-destructive enhancements only. The underlying OpenAPI is never mutated.
+extends: openapi/genome-payouts-api-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-provider: Genome (UAB "Maneuver LT")
+    x-regulator: Bank of Lithuania
+    x-error-model: proprietary-envelope
+    x-error-catalog: errors/genome-error-codes.yml
+    x-conventions: conventions/genome-conventions.yml
+    x-authentication: authentication/genome-authentication.yml
+- target: $.paths['/api/pf/payout'].post
+  update:
+    x-consequence: irreversible-write
+    x-reversibility:
+      reversal: none
+      window: null
+      note: >-
+        No cancel, void, reverse or recall operation exists for a card payout. Once accepted the funds
+        are on their way. Any agent exposure of this operation must require human approval.
+    x-idempotency:
+      field: transaction_unique_id
+      coverage: partial
+      behaviour: reject-duplicate
+      duplicate_code: 3001
+    x-async:
+      synchronous_status: pending
+      final_status_delivered_by: callback to callback_url
+      note: >-
+        The synchronous response is explicitly NOT final. A caller with no reachable HTTPS callback
+        endpoint must poll a status check instead.
+    x-unknown-outcome-codes: [1, 2, 3, 10, 11, 12, 1003, 3109, 3117, 3118, 3124, 3125, 3133, 6000, 7000, 7101, 7102, 7103]
+    x-unknown-outcome-action: Check the transaction status. Do not re-submit the payout.
+    x-payout-error-band: 3300-3330 (general payout error, payout validation error, invalid mid reference, unregistered card)
+    x-test-mode:
+      discriminator: currency
+      value: XTS
+    x-rate-limit-headers: none
+- target: $.paths['/api/pf/payout'].post.responses['200']
+  update:
+    x-outcome-note: >-
+      HTTP 200 with status "pending" is the normal accepted response and is not a completion. Read
+      `code` for the submission outcome and wait for the callback for the settlement outcome.
+- target: $.components.schemas.PayoutRequest
+  update:
+    x-pii: true
+    x-pci-scope: true
+    x-note: Supply either full card data or card[card_token], not both.

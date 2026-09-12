@@ -1,0 +1,85 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Genome Host-to-Host API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-12'
+  method: generated
+  source: https://developers.genome.eu/merchants/host-to-host-api/ + https://developers.genome.eu/list-of-response-codes/ + https://gateway.genome.eu/help/cc + live probe of https://api.genome.eu/api/pf/host-to-host on 2026-09-12
+  extends: openapi/genome-host-to-host-api-openapi.yml
+  note: >-
+    Non-destructive enhancements only. The underlying OpenAPI is never mutated. Everything asserted
+    here is traceable to a Genome documentation page or to an observed live response; nothing is
+    invented.
+extends: openapi/genome-host-to-host-api-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-provider: Genome (UAB "Maneuver LT")
+    x-regulator: Bank of Lithuania
+    x-error-model: proprietary-envelope
+    x-error-catalog: errors/genome-error-codes.yml
+    x-decline-catalog: errors/genome-decline-codes.yml
+    x-conventions: conventions/genome-conventions.yml
+    x-authentication: authentication/genome-authentication.yml
+    x-http-status-semantics: >-
+      This API returns HTTP 200 for rejected, malformed and declined requests. The outcome is in the
+      response body `code` field. Observed live 2026-09-12.
+- target: $.components.securitySchemes
+  update:
+    merchantCredentials:
+      type: apiKey
+      in: query
+      name: merchant_account
+      description: >-
+        DOCUMENTATION-ONLY approximation. Genome authenticates with merchant_account and
+        merchant_password carried as fields in the request BODY, which OpenAPI cannot express as a
+        securityScheme. The real model is documented at
+        https://developers.genome.eu/merchants/host-to-host-api/ and in
+        authentication/genome-authentication.yml. Do not generate a client from this scheme.
+- target: $.paths['/api/pf/host-to-host'].post
+  update:
+    x-transaction-types:
+    - {type: AUTH, consequence: hold, reversible_by: VOID, description: Hold an amount on the cardholder account with full card data. Genome auto-voids after about 7 days (acquirer dependent).}
+    - {type: AUTH3D, consequence: hold, reversible_by: VOID, description: Hold with 3-D Secure authentication; returns redirect_url.}
+    - {type: SALE, consequence: capture, reversible_by: REFUND, description: Authorize and capture in one call. VOID is not available after a successful SALE.}
+    - {type: SALE3D, consequence: capture, reversible_by: REFUND, description: Authorize and capture with 3-D Secure; returns redirect_url.}
+    - {type: SETTLE, consequence: capture, reversible_by: REFUND, description: Capture a previously authorized transaction, addressed by base_reference.}
+    - {type: REFUND, consequence: reversal, reversible_by: none, description: Return part or all of a settled transaction. A transaction cannot be refunded twice (code 3009).}
+    - {type: VOID, consequence: reversal, reversible_by: none, description: Cancel a transaction before settlement. Never appears on the cardholder statement.}
+    - {type: CHECK, consequence: read, reversible_by: n/a, description: Read the status of a prior transaction. The required response to any unknown outcome.}
+    x-idempotency:
+      field: transaction_unique_id
+      coverage: partial
+      behaviour: reject-duplicate
+      duplicate_code: 3001
+      note: Re-sending a used key returns error 3001; it does not replay the original response.
+    x-unknown-outcome-codes: [1, 2, 3, 10, 11, 12, 1003, 3109, 3117, 3118, 3124, 3125, 3133, 6000, 7000, 7101, 7102, 7103]
+    x-unknown-outcome-action: Send a CHECK transaction request. Do not retry the payment.
+    x-test-mode:
+      discriminator: currency
+      value: XTS
+      note: Test transactions run on the production host, selected by ISO 4217 test currency XTS.
+    x-callback-signature:
+      field: checkSum
+      algorithm: SHA-256 over pipe-joined key-sorted fields plus the merchant private signature
+    x-response-headers-observed: [x-itc-rayid, x-itc-code, x-itc-api, x-itc-executiontype]
+    x-rate-limit-headers: none
+- target: $.paths['/api/pf/host-to-host'].post.responses['200']
+  update:
+    x-outcome-note: >-
+      HTTP 200 does NOT mean the transaction succeeded. Read the `code` field: 0 is success, every
+      other value is an error, a decline or an unknown outcome.
+- target: $.components.schemas.TransactionResponse
+  update:
+    x-outcome-field: code
+    x-outcome-success-value: 0
+    x-trace-field: sessionid
+- target: $.components.schemas.CardData
+  update:
+    x-pii: true
+    x-pci-scope: true
+    x-note: >-
+      Sending full card data puts the merchant in PCI DSS scope. Genome's own guidance is that a
+      merchant system should avoid requesting and storing card data; use the Hosted Payment Page, the
+      Financial Pixel SDK, or a card_token instead.

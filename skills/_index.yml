@@ -1,0 +1,48 @@
+generated: '2026-09-12'
+method: generated
+source: openapi/genome-host-to-host-api-openapi.yml + openapi/genome-payouts-api-openapi.yml + https://developers.genome.eu/
+provider: Genome
+providerId: genome
+description: >-
+  Packaged agent skills for the Genome merchant payment APIs. Every step is grounded in a real
+  operationId from the OpenAPI in this repository or a documented endpoint and response code from
+  developers.genome.eu. Genome publishes no skills, AGENTS.md or llms.txt of its own; these are
+  written by API Evangelist.
+skills:
+- name: genome-card-authorize-and-capture
+  file: skills/genome-card-authorize-and-capture.md
+  api: Genome Host-to-Host API
+  operations: [processTransaction]
+  transaction_types: [AUTH, AUTH3D, SETTLE, VOID, CHECK]
+  consequence: write, reversible before settlement
+  description: Hold funds at order time, capture on ship, or release the hold. Covers the callback and the unknown-outcome rule.
+- name: genome-card-payout
+  file: skills/genome-card-payout.md
+  api: Genome Payouts API
+  operations: [initPayout]
+  consequence: irreversible-write
+  description: Push funds to a cardholder, with the guardrails an irreversible operation needs, plus the SEPA and Verification of Payee alternative.
+- name: genome-reconcile-transactions
+  file: skills/genome-reconcile-transactions.md
+  api: Genome Query on Demand API
+  operations: [processTransaction]
+  transaction_types: [CHECK]
+  consequence: read
+  description: Walk transaction and chargeback history, join child transactions by base_reference, and resolve unknown outcomes with CHECK.
+shared_rules:
+- HTTP 200 does not mean success. Read the envelope `code`; 0 is the only success value.
+- Eighteen response codes mean the outcome is UNKNOWN. Send a CHECK request, never a retry.
+- transaction_unique_id prevents duplicates but does not replay a lost response.
+- Test mode is the XTS currency on the production host; there is no sandbox endpoint or key.
+- No rate limits are published and no rate-limit headers are returned.
+- Card payouts and SEPA payouts have no reversal.
+references:
+  errors: errors/genome-error-codes.yml
+  declines: errors/genome-decline-codes.yml
+  conventions: conventions/genome-conventions.yml
+  authentication: authentication/genome-authentication.yml
+  sandbox: sandbox/genome-sandbox.yml
+  webhooks: asyncapi/genome-webhooks.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

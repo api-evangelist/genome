@@ -1,0 +1,107 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/merchants/web-sdk-integration/ + https://developers.genome.eu/merchants/hosted-payment-page/ + https://github.com/genome-eu
+provider: Genome
+providerId: genome
+description: >-
+  Client-side and embeddable surfaces Genome ships — the parts a merchant drops into a page or an app
+  rather than calls from a server. Distinct from the server SDKs in packages/genome-packages.yml.
+families:
+- id: financial-pixel-sdk
+  name: Financial Pixel SDK
+  type: browser-embedded payment form
+  docs: https://developers.genome.eu/merchants/web-sdk-integration/
+  loader:
+    distribution: ES module from Genome's own payment host
+    iframe_build: https://pay.genome.eu/sdk/iframe.es.js
+    popup_build: https://pay.genome.eu/sdk/popup.es.js
+    pinned: false
+    integrity: none
+    note: >-
+      The documented import URL carries no version and no subresource-integrity hash, so the merchant
+      page silently takes whatever build is deployed. See packages/genome-packages.yml.
+  entry_point: createPaymentPage(config)
+  modes:
+  - id: iframe
+    description: Embeds the payment form inline in a container element on the merchant page.
+    best_for: [embedded checkout, custom-styled payment pages, single-page applications]
+    features: [customizable width (default 100%), automatic height adjustment]
+  - id: popup
+    description: Opens the payment form in a fullscreen overlay; a container element is still required to attach the overlay.
+    best_for: [minimal integration, mobile-optimized flows]
+  configuration:
+    required:
+    - url
+    - container_id
+    - api_key
+    - signature
+    - amount
+    - currency_iso
+    - user_id
+    - order_id
+    - mcc
+    - success_url
+    - failure_url
+    optional:
+    - width
+  isolation: postMessage with frame isolation
+  lifecycle: show() to render, destroy() to clean up
+  theming: not yet available (Genome states theming is coming soon)
+  multiple_instances: supported
+- id: hosted-payment-page
+  name: Hosted Payment Page
+  type: full-page redirect checkout
+  docs: https://developers.genome.eu/merchants/hosted-payment-page/
+  host: https://pay.genome.eu
+  session: HS256 JWT signed with the SHA-256 digest of the payment page secret
+  methods_supported:
+  - Credit/Debit Card
+  - Pay by Bank (instant bank payments)
+  display_options:
+  - OPTION_SHOW_EMAIL
+  - OPTION_ALLOW_EDIT_PRESET
+  note: >-
+    PCI scope stays with Genome — the merchant never handles card data. Activation of the payment page
+    in the merchant dashboard is the explicit go-live gate.
+- id: mobile-sdks
+  name: Mobile payment SDKs
+  type: native mobile
+  components:
+  - platform: iOS
+    name: GenomePaymentSdk
+    source: https://github.com/genome-eu/payment-sdk-ios
+    version: 1.1.1
+    published: '2021-10-12'
+  - platform: Android
+    name: eu.genome.android:sdk-payment
+    source: https://github.com/genome-eu/payment-sdk-android
+    version: 1.1.0
+    published: '2021-10-11'
+  note: >-
+    Neither SDK is linked from the current developer documentation and both were last released in
+    October 2021, well before the JWT-based Hosted Payment Page flow that the docs now describe.
+- id: ecommerce-plugins
+  name: E-commerce platform plugins
+  type: drop-in storefront integration
+  source: https://github.com/genome-eu
+  components:
+  - {platform: WooCommerce, repo: https://github.com/genome-eu/woocommerce, last_push: '2021-02-11'}
+  - {platform: Magento 2, repo: https://github.com/genome-eu/magento-v2, last_push: '2021-10-27'}
+  - {platform: Magento 1, repo: https://github.com/genome-eu/magento, last_push: '2019-07-08'}
+  - {platform: PrestaShop, repo: https://github.com/genome-eu/prestashop, last_push: '2020-09-10'}
+  - {platform: OpenCart, repo: https://github.com/genome-eu/opencart, last_push: '2020-09-10'}
+  - {platform: OXID eShop, repo: https://github.com/genome-eu/oxid, last_push: '2020-09-10'}
+  - {platform: Ecwid, repo: https://github.com/genome-eu/ecwid, last_push: '2021-10-27'}
+  - {platform: Drupal Commerce, repo: https://github.com/genome-eu/drupal, last_push: '2019-07-08'}
+  note: >-
+    None is listed on its platform's own marketplace and none is linked from the current developer
+    documentation; they are discoverable only by finding the GitHub organisation.
+summary:
+  families: 4
+  browser_components: 2
+  mobile_sdks: 2
+  ecommerce_plugins: 8
+  actively_documented: 2
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,507 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/list-of-response-codes/
+docs: https://developers.genome.eu/list-of-response-codes/
+provider: Genome
+providerId: genome
+format: proprietary-envelope
+description: >-
+  Genome's complete published response-code registry: 137 numeric codes covering every merchant API
+  surface (Host-to-Host, Payout, SEPA Payout, Query on Demand, Verification of Payee and the
+  reconciliation, auth and statistics services). Genome publishes this as one flat table; the
+  `class` on each entry below is derived from the documented numeric banding, and the
+  `on_unknown_check_status` flag is taken verbatim from Genome's own "Behavior on response codes"
+  table.
+envelope:
+  note: >-
+    Genome does NOT use HTTP status codes to signal application outcomes. Probed 2026-09-12: a
+    malformed POST to https://api.genome.eu/api/pf/host-to-host returned HTTP 200 with
+    {"status":"error","code":1004,"message":"Invalid request"}. An agent MUST read the envelope
+    `code`, never the HTTP status. This is not RFC 9457 problem+json and carries no `type` URI.
+  http_status_on_error: 200
+  fields:
+  - name: code
+    type: integer
+    description: The response code from the registry below. 0 is the only success value.
+  - name: message
+    type: string
+    description: Human-readable message; Genome states it may be extended depending on the case.
+  - name: status
+    type: string
+    description: Request-level status, e.g. error / pending / success.
+  - name: session_id
+    type: string
+    description: Unique session id for the request. Also returned as `sessionid` on the Host-to-Host surface.
+  - name: timestamp
+    type: integer
+    description: Unix timestamp of the response.
+  - name: reference
+    type: string
+    description: Genome's transaction reference, present on transaction responses.
+  response_headers_observed:
+  - x-itc-rayid
+  - x-itc-code
+  - x-itc-api
+  - x-itc-executiontype
+  headers_note: >-
+    Observed on a live unauthenticated probe 2026-09-12. x-itc-rayid is the per-request trace id and
+    is the value to quote to Genome support; x-itc-code mirrors the envelope code. None of these
+    headers is documented.
+retry_semantics:
+  note: >-
+    Genome publishes an explicit disposition table. For the codes flagged
+    `on_unknown_check_status: true` the transaction result is UNKNOWN and the merchant must issue a
+    CHECK request rather than assume failure or retry the payment. Every other non-zero code is a
+    DECLINE. This is the single most important rule for an autonomous caller: treating an unknown as
+    a failure and retrying can double-charge a cardholder.
+  unknown_action: Send a CHECK transaction request to resolve the true status.
+  default_for_other_codes: decline
+codes:
+- code: 0
+  message: "Transaction processed successfully"
+  class: success
+  on_unknown_check_status: true
+- code: 1
+  message: "General internal service error"
+  class: service
+  on_unknown_check_status: true
+- code: 2
+  message: "Internal DB error"
+  class: service
+  on_unknown_check_status: true
+- code: 3
+  message: "General service error"
+  class: service
+  on_unknown_check_status: true
+- code: 4
+  message: "Access denied"
+  class: service
+- code: 10
+  message: "General internal service communication error"
+  class: service
+  on_unknown_check_status: true
+- code: 11
+  message: "Internal timeout"
+  class: service
+  on_unknown_check_status: true
+- code: 12
+  message: "Internal SSL error"
+  class: service
+  on_unknown_check_status: true
+- code: 1000
+  message: "Merchant gate error"
+  class: request
+- code: 1001
+  message: "Request format error"
+  class: request
+- code: 1002
+  message: "[field] not present in request"
+  class: request
+- code: 1003
+  message: "Internal communication error"
+  class: request
+  on_unknown_check_status: true
+- code: 1004
+  message: "Invalid [field] in request message"
+  class: request
+- code: 1005
+  message: "Unsupported API version"
+  class: request
+- code: 1006
+  message: "[field] should not be present in request"
+  class: request
+- code: 2000
+  message: "General MMS error"
+  class: account
+- code: 2001
+  message: "Incorrect value in merchant account or pass field"
+  class: account
+- code: 2002
+  message: "Country is not available"
+  class: account
+- code: 2003
+  message: "Merchant account exists but not active"
+  class: account
+- code: 2004
+  message: "Transaction is not allowed to account"
+  class: account
+- code: 2005
+  message: "MID is not active"
+  class: account
+- code: 2006
+  message: "There is no currency configured for account"
+  class: account
+- code: 2007
+  message: "Amount is below or above amount restrictions"
+  class: account
+- code: 2008
+  message: "Access from this IP-address is not available"
+  class: account
+- code: 2009
+  message: "Merchant is not activated"
+  class: account
+- code: 2010
+  message: "Gate is not active"
+  class: account
+- code: 2011
+  message: "Entity already exists"
+  class: account
+- code: 2012
+  message: "Entity not found"
+  class: account
+- code: 2013
+  message: "Bad API credentials"
+  class: account
+- code: 3000
+  message: "General processing error"
+  class: processing
+- code: 3001
+  message: "Transaction ID/Order ID is already used"
+  class: processing
+- code: 3002
+  message: "Token not found or invalid"
+  class: processing
+- code: 3003
+  message: "Reference not found or invalid"
+  class: processing
+- code: 3004
+  message: "It is not possible to void the the provided reference"
+  class: processing
+- code: 3005
+  message: "It is not possible to refund the provided reference"
+  class: processing
+- code: 3006
+  message: "Transaction is chargebacked"
+  class: processing
+- code: 3007
+  message: "Illegal interval between AUTH and SETTLE/VOID, between AUTH 3D and SETTLE/SALE"
+  class: processing
+- code: 3008
+  message: "Transaction was already voided"
+  class: processing
+- code: 3009
+  message: "Transaction was already refunded"
+  class: processing
+- code: 3010
+  message: "Transaction was already settled"
+  class: processing
+- code: 3011
+  message: "MID doesn't support the card type"
+  class: processing
+- code: 3012
+  message: "Account doesn't support 3D secure"
+  class: processing
+- code: 3013
+  message: "Account support only 3D secure transaction"
+  class: processing
+- code: 3014
+  message: "There was no transaction found on your Check request"
+  class: processing
+- code: 3015
+  message: "Bank MID doesn't support the currency"
+  class: processing
+- code: 3016
+  message: "Amount in settle transaction is incorrect"
+  class: processing
+- code: 3017
+  message: "Bank MID access credentials are incorrect"
+  class: processing
+- code: 3018
+  message: "Bank refused the connection"
+  class: processing
+- code: 3019
+  message: "Request cannot be validated"
+  class: processing
+- code: 3020
+  message: "Chargeback is invalid"
+  class: processing
+- code: 3021
+  message: "Transaction is blocked by routing"
+  class: processing
+- code: 3022
+  message: "The amount is incorrect"
+  class: processing
+- code: 3023
+  message: "Transaction is aborted by the customer"
+  class: processing
+- code: 3024
+  message: "Transaction is expired"
+  class: processing
+- code: 3025
+  message: "Transaction is completed"
+  class: processing
+- code: 3027
+  message: "Pending MSISDN found"
+  class: processing
+- code: 3100
+  message: "Transaction declined by bank network"
+  class: bank-decline
+- code: 3101
+  message: "Insufficient funds"
+  class: bank-decline
+- code: 3102
+  message: "Card lost or stolen"
+  class: bank-decline
+- code: 3103
+  message: "3d secure authentication failed"
+  class: bank-decline
+- code: 3104
+  message: "Invalid CVV"
+  class: bank-decline
+- code: 3105
+  message: "Card expired due to expiry date or expiry date is not correct"
+  class: bank-decline
+- code: 3106
+  message: "Bank cannot process selected amount"
+  class: bank-decline
+- code: 3107
+  message: "Invalid card number"
+  class: bank-decline
+- code: 3108
+  message: "It is not possible to issue refund due to bank limit"
+  class: bank-decline
+- code: 3109
+  message: "Timeout between PSP and bank"
+  class: bank-decline
+  on_unknown_check_status: true
+- code: 3110
+  message: "Not all required data was provided to the specific bank"
+  class: bank-decline
+- code: 3111
+  message: "Access error to a bank acquirer"
+  class: bank-decline
+- code: 3112
+  message: "Card type is not supported by MID"
+  class: bank-decline
+- code: 3113
+  message: "Transaction type is not supported by MID"
+  class: bank-decline
+- code: 3114
+  message: "Currency is not supported by MID"
+  class: bank-decline
+- code: 3115
+  message: "Refund not possible by bank"
+  class: bank-decline
+- code: 3116
+  message: "Country is not supported by MID"
+  class: bank-decline
+- code: 3117
+  message: "Malformed bank response"
+  class: bank-decline
+  on_unknown_check_status: true
+- code: 3118
+  message: "Connection error between PSP and bank"
+  class: bank-decline
+  on_unknown_check_status: true
+- code: 3119
+  message: "Referral or restricted card"
+  class: bank-decline
+- code: 3120
+  message: "Risk Bank Decline"
+  class: bank-decline
+- code: 3121
+  message: "Invalid acquirer token"
+  class: bank-decline
+- code: 3122
+  message: "Invalid acquirer reference"
+  class: bank-decline
+- code: 3123
+  message: "Card 3D secure is not enabled"
+  class: bank-decline
+- code: 3124
+  message: "Unknown acquirer processing status"
+  class: bank-decline
+  on_unknown_check_status: true
+- code: 3125
+  message: "Acquirer internal error"
+  class: bank-decline
+  on_unknown_check_status: true
+- code: 3126
+  message: "Withdrawal frequency limit exceeded"
+  class: bank-decline
+- code: 3127
+  message: "Bank negative list"
+  class: bank-decline
+- code: 3128
+  message: "Fraud bank decline"
+  class: bank-decline
+- code: 3129
+  message: "Authorization declined"
+  class: bank-decline
+- code: 3130
+  message: "Revocation of authorization order"
+  class: bank-decline
+- code: 3131
+  message: "Repeats not allowed by operator"
+  class: bank-decline
+- code: 3132
+  message: "Recurring is stopped by the customer"
+  class: bank-decline
+- code: 3134
+  message: "Transaction is expired (by bank)"
+  class: bank-decline
+- code: 3135
+  message: "Verification required by issuer"
+  class: bank-decline
+- code: 3140
+  message: "General bank decline"
+  class: bank-decline
+- code: 3150
+  message: "Invalid transaction"
+  class: bank-decline
+- code: 3157
+  message: "Transaction not permitted"
+  class: bank-decline
+- code: 3170
+  message: "Invalid or closed account"
+  class: bank-decline
+- code: 3200
+  message: "Declined by anti-fraud system"
+  class: antifraud
+- code: 3201
+  message: "Sent for manual review by anti-fraud system"
+  class: antifraud
+- code: 3202
+  message: "Volume limit exceeded"
+  class: antifraud
+- code: 3203
+  message: "Refund limit exceeded"
+  class: antifraud
+- code: 3220
+  message: "Declined by anti-fraud trust lists"
+  class: antifraud
+- code: 3221
+  message: "Sent for manual review by anti-fraud trust lists"
+  class: antifraud
+- code: 3300
+  message: "General payout error"
+  class: payout
+- code: 3310
+  message: "Payout validation error"
+  class: payout
+- code: 3311
+  message: "Invalid mid reference"
+  class: payout
+- code: 3330
+  message: "Unregistered card"
+  class: payout
+- code: 4000
+  message: "General reconciliation error"
+  class: reconciliation
+- code: 4001
+  message: "Reconciliation data is not ready"
+  class: reconciliation
+- code: 4002
+  message: "Reconciliation total amount doesn't match"
+  class: reconciliation
+- code: 4003
+  message: "Reconciliation total count doesn't match"
+  class: reconciliation
+- code: 4004
+  message: "General FRS error"
+  class: reconciliation
+- code: 4005
+  message: "Balance is not available"
+  class: reconciliation
+- code: 4006
+  message: "Currency is not available"
+  class: reconciliation
+- code: 4007
+  message: "Exceeded amount"
+  class: reconciliation
+- code: 5000
+  message: "General QoD error"
+  class: qod
+- code: 5001
+  message: "Unsupported QoD API version"
+  class: qod
+- code: 5002
+  message: "Invalid [time] fields order"
+  class: qod
+- code: 6000
+  message: "General internal auth failure"
+  class: auth
+  on_unknown_check_status: true
+- code: 6001
+  message: "Wrong credentials"
+  class: auth
+- code: 6002
+  message: "Access denied"
+  class: auth
+- code: 6003
+  message: "The user already exists"
+  class: auth
+- code: 6004
+  message: "The user is  not  found"
+  class: auth
+- code: 6005
+  message: "The role is not found"
+  class: auth
+- code: 6006
+  message: "The permission is not found"
+  class: auth
+- code: 6007
+  message: "The token is expired"
+  class: auth
+- code: 6008
+  message: "The token is not found"
+  class: auth
+- code: 6009
+  message: "The user is temporary blocked"
+  class: auth
+- code: 6010
+  message: "The password is expired"
+  class: auth
+- code: 6011
+  message: "The password is invalid"
+  class: auth
+- code: 6012
+  message: "The password is previously used"
+  class: auth
+- code: 6013
+  message: "Recovery key have been used"
+  class: auth
+- code: 6014
+  message: "Request totp from user"
+  class: auth
+- code: 7000
+  message: "Internal payment gate error"
+  class: payment-gate
+  on_unknown_check_status: true
+- code: 7101
+  message: "Internal payment gate sender error"
+  class: payment-gate
+  on_unknown_check_status: true
+- code: 7102
+  message: "External communication error"
+  class: payment-gate
+  on_unknown_check_status: true
+- code: 7103
+  message: "External communication timeout"
+  class: payment-gate
+  on_unknown_check_status: true
+- code: 8000
+  message: "General internal stats failure"
+  class: stats
+- code: 8001
+  message: "Date range is too long for selected aggregation interval"
+  class: stats
+summary:
+  code_count: 137
+  classes:
+    service: 7
+    request: 7
+    account: 14
+    processing: 27
+    bank-decline: 39
+    antifraud: 6
+    payout: 4
+    reconciliation: 8
+    qod: 3
+    auth: 15
+    payment-gate: 4
+    stats: 2
+  unknown_status_codes: 18
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

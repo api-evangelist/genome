@@ -1,41 +1,57 @@
 aid: genome
 name: Genome
 description: >-
-  Below you can find the information and tutorials that will teach you how to
-  use Genome hosted payment pages, host to host integration, Payout API and
-  Query on demand API.
+  Genome, operated by UAB "Maneuver LT" of Vilnius, is an Electronic Money Institution licensed and
+  supervised by the Bank of Lithuania. It runs multi-currency personal and business accounts, issues
+  Visa cards, and sells a merchant payments stack that is documented as six public API surfaces: the
+  Host-to-Host API for direct card processing (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID and
+  CHECK), the Payout API for sending funds to cardholders, the SEPA Payout API, the Query on Demand
+  reporting API, a Verification of Payee API returning the EPC scheme's match outcomes, and a Berlin
+  Group NextGenPSD2 dedicated interface offered free of charge to registered AISPs and PISPs. Batch
+  transfers are submitted as ISO 20022 pain.001.001.03. Outcomes are carried in a proprietary
+  137-code response envelope rather than HTTP status codes, and Genome publishes no OpenAPI, AsyncAPI,
+  MCP server or /.well-known/ document on any of its hosts.
 type: Index
 deliveryModel:
   model: unknown
   open_source: false
-  commercial: false
+  commercial: true
   callable_host: true
-  label: Delivery model not determined — needs a product licence on record
-  confidence: low
-  source:
-  - openapi
-  generated: '2026-08-28'
-  method: derived
-accessModel:
-  pricing: freemium
-  onboarding: unknown
-  trial: false
-  try_now: false
-  public: false
-  label: Freemium
+  label: Commercial payments service behind an approved merchant account
   confidence: medium
   source:
   - plans
-  generated: '2026-07-22'
-  method: derived
+  - openapi
+  generated: '2026-09-12'
+  method: searched
+accessModel:
+  pricing: usage-based
+  onboarding: sales-assisted
+  trial: false
+  try_now: false
+  public: false
+  label: Per-transaction pricing, risk-classified; API access follows merchant account approval
+  confidence: high
+  source:
+  - plans
+  generated: '2026-09-12'
+  method: searched
 position: Consuming
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/genome.png
 tags:
-  - Finance
-  - Payments
+- Finance
+- Payments
+- Banking
+- Open Banking
+- PSD2
+- SEPA
+- Card Processing
+- Payouts
+- Electronic Money Institution
+- Europe
 created: '2025-03-01'
-modified: '2026-04-28'
+modified: '2026-09-12'
 url: >-
   https://raw.githubusercontent.com/api-evangelist/genome/refs/heads/main/apis.yml
 specificationVersion: '0.23'
@@ -43,9 +59,11 @@ apis:
 - aid: genome:genome
   name: Genome
   description: >-
-    Below you can find the information and tutorials that will teach you how to use Genome hosted payment
-    pages, host to host integration, Payout API and Query on demand API.
-  humanURL: https://genome.eu/docs/
+    The Genome merchant payments programme as a whole — hosted payment pages, host-to-host card
+    processing, payouts, reporting and the PSD2 dedicated interface, all documented at
+    developers.genome.eu.
+  humanURL: https://developers.genome.eu/
+  baseURL: https://api.genome.eu
   tags:
   - Finance
   - Payments
@@ -53,38 +71,200 @@ apis:
   - type: Documentation
     url: https://developers.genome.eu/
   - type: GettingStarted
-    url: https://developers.genome.eu/
+    url: https://developers.genome.eu/merchants/hosted-payment-page/
   - type: Webhooks
-    url: https://developers.genome.eu/
+    url: https://developers.genome.eu/webhooks/
+  - type: ErrorCatalog
+    url: errors/genome-error-codes.yml
 - aid: genome:genome-host-to-host-api
   name: Genome Host-to-Host API
-  description: Direct card processing
-  humanURL: https://genome.eu/docs/
+  description: >-
+    Direct card processing. One endpoint dispatching eight transaction types — AUTH, AUTH3D, SALE,
+    SALE3D, SETTLE, REFUND, VOID and CHECK — accepting form-encoded or JSON bodies.
+  humanURL: https://developers.genome.eu/merchants/host-to-host-api/
+  baseURL: https://api.genome.eu
   tags:
   - Host-to-Host
+  - Card Processing
   properties:
   - type: OpenAPI
     url: openapi/genome-host-to-host-api-openapi.yml
+  - type: Overlay
+    url: overlays/genome-host-to-host-api-overlay.yaml
+  - type: Documentation
+    url: https://developers.genome.eu/merchants/host-to-host-api/
+  - type: APIReference
+    url: https://gateway.genome.eu/help/cc
 - aid: genome:genome-payouts-api
   name: Genome Payouts API
-  description: Send funds to cardholders
-  humanURL: https://genome.eu/docs/
+  description: >-
+    Send funds to cardholders using full card data or a tokenized card. The synchronous response is
+    pending; the final status arrives on the merchant callback. No reversal operation exists.
+  humanURL: https://developers.genome.eu/merchants/payout-api/
+  baseURL: https://api.genome.eu
   tags:
   - Payouts
   properties:
   - type: OpenAPI
     url: openapi/genome-payouts-api-openapi.yml
-common:
-  - type: AgenticAccess
-    url: agentic-access/genome-agentic-access.yml
-  - type: DomainSecurity
-    url: security/genome-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/genome
-  - type: Website
-    url: https://genome.eu/
+  - type: Overlay
+    url: overlays/genome-payouts-api-overlay.yaml
   - type: Documentation
-    url: https://developers.genome.eu/
+    url: https://developers.genome.eu/merchants/payout-api/
+- aid: genome:genome-sepa-payout-api
+  name: Genome SEPA Payout API
+  description: >-
+    SEPA credit transfer payouts by IBAN, with a companion transaction-status surface. Amounts can be
+    read including or excluding the SEPA payout fee. No OpenAPI is published for this surface.
+  humanURL: https://developers.genome.eu/sepa-payout-api/
+  baseURL: https://api.genome.eu
+  tags:
+  - Payouts
+  - SEPA
+  properties:
+  - type: Documentation
+    url: https://developers.genome.eu/sepa-payout-api/
+- aid: genome:genome-query-on-demand-api
+  name: Genome Query on Demand API
+  description: >-
+    Historical transaction and chargeback reporting over a required unix time window, paged by page
+    and limit with a 1,000-record page ceiling. No OpenAPI is published for this surface.
+  humanURL: https://developers.genome.eu/merchants/query-on-demand-api/
+  baseURL: https://api.genome.eu
+  tags:
+  - Reporting
+  - Reconciliation
+  properties:
+  - type: Documentation
+    url: https://developers.genome.eu/merchants/query-on-demand-api/
+- aid: genome:genome-verification-of-payee-api
+  name: Genome Verification of Payee API
+  description: >-
+    Check a SEPA beneficiary's name or identifier against the account before sending a payment.
+    Returns the EPC VOP scheme outcomes — match, close match, no match, no applicable — with a
+    suggested payee name on a close match. No OpenAPI is published for this surface.
+  humanURL: https://developers.genome.eu/verification-of-payee-api/
+  baseURL: https://api.genome.eu
+  tags:
+  - SEPA
+  - Verification of Payee
+  - Fraud Prevention
+  properties:
+  - type: Documentation
+    url: https://developers.genome.eu/verification-of-payee-api/
+- aid: genome:genome-psd2-api
+  name: Genome PSD2 API
+  description: >-
+    Berlin Group NextGenPSD2 dedicated interface. Account Information Services, Payment Initiation
+    Services for SEPA credit transfers, and Confirmation of Funds, secured with OAuth 2.0, Strong
+    Customer Authentication and an eIDAS QWAC. Free to registered AISPs and PISPs. No OpenAPI is
+    published for this surface.
+  humanURL: https://developers.genome.eu/psd2-api/
+  baseURL: https://my.genome.eu/psd2/v1
+  tags:
+  - PSD2
+  - Open Banking
+  - Berlin Group
+  properties:
+  - type: Documentation
+    url: https://developers.genome.eu/psd2-api/
+  - type: Authentication
+    url: authentication/genome-authentication.yml
+- aid: genome:genome-hosted-payment-page
+  name: Genome Hosted Payment Page
+  description: >-
+    Redirect checkout hosted by Genome, opened with an HS256 JWT signed with the SHA-256 digest of the
+    payment page secret. Keeps card data out of merchant scope. Supports card and Pay by Bank.
+  humanURL: https://developers.genome.eu/merchants/hosted-payment-page/
+  baseURL: https://pay.genome.eu
+  tags:
+  - Hosted Payment Page
+  - Checkout
+  properties:
+  - type: Documentation
+    url: https://developers.genome.eu/merchants/hosted-payment-page/
+  - type: Components
+    url: components/genome-components.yml
+common:
+- type: Website
+  url: https://genome.eu/
+- type: DeveloperPortal
+  url: https://developers.genome.eu/
+- type: Documentation
+  url: https://developers.genome.eu/
+- type: APIReference
+  url: https://gateway.genome.eu/help/cc
+- type: GettingStarted
+  url: https://developers.genome.eu/merchants/hosted-payment-page/
+- type: Support
+  url: https://support.genome.eu/hc/en-us/
+- type: Blog
+  url: https://blog.genome.eu
+- type: GitHubOrganization
+  url: https://github.com/genome-eu
+- type: Pricing
+  url: https://genome.eu/low-risk-merchant-account-pricing/
+- type: SignUp
+  url: https://my.genome.eu/signup
+- type: TermsOfService
+  url: https://genome.eu/merchant-terms-of-use/
+- type: PrivacyPolicy
+  url: https://genome.eu/privacy-notice/
+- type: StatusPage
+  url: https://status.genome.eu
+- type: LinkedIn
+  url: https://www.linkedin.com/company/genome-europe/
+- type: Authentication
+  url: authentication/genome-authentication.yml
+- type: Conventions
+  url: conventions/genome-conventions.yml
+- type: Idempotency
+  url: conventions/genome-conventions.yml
+- type: ErrorCatalog
+  url: errors/genome-error-codes.yml
+- type: DeclineCodes
+  url: errors/genome-decline-codes.yml
+- type: Webhooks
+  url: asyncapi/genome-webhooks.yml
+- type: Lifecycle
+  url: lifecycle/genome-lifecycle.yml
+- type: Conformance
+  url: conformance/genome-conformance.yml
+- type: Compliance
+  url: conformance/genome-conformance.yml
+- type: TrustCenter
+  url: security/genome-trust-center.yml
+- type: DomainSecurity
+  url: security/genome-domain-security.yml
+- type: Packages
+  url: packages/genome-packages.yml
+- type: SDKs
+  url: packages/genome-packages.yml
+- type: Components
+  url: components/genome-components.yml
+- type: DataModel
+  url: data-model/genome-data-model.yml
+- type: Sandbox
+  url: sandbox/genome-sandbox.yml
+- type: Plans
+  url: plans/genome-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/genome-rate-limits.yml
+- type: FinOps
+  url: finops/genome-finops.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/genome-llms.txt
+- type: AgenticAccess
+  url: agentic-access/genome-agentic-access.yml
+- type: X-MCPServerCandidate
+  url: mcp/genome-mcp.yml
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-12'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v3

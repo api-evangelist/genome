@@ -1,0 +1,235 @@
+generated: '2026-09-12'
+method: searched
+source: https://developers.genome.eu/list-of-response-codes/
+docs: https://developers.genome.eu/list-of-response-codes/
+provider: Genome
+providerId: genome
+description: >-
+  The card-decline slice of Genome's response-code registry — the 3100-3199 issuer/acquirer band and
+  the 3200-3299 anti-fraud band. These are the codes that mean "the money did not move and a human or
+  agent has to decide what to do next", as distinct from the malformed-request and account-eligibility
+  codes carried in errors/genome-error-codes.yml.
+envelope_field: code
+envelope_message_field: message
+http_status_on_decline: 200
+masking:
+  note: >-
+    Genome publishes the full decline text for every code, so nothing is masked at the API boundary —
+    the merchant sees the real reason. That makes masking the MERCHANT's responsibility: codes such as
+    3102 (card lost or stolen), 3127 (bank negative list), 3128 (fraud bank decline), 3200 and 3220
+    (anti-fraud declines) must not be surfaced verbatim to a buyer, because doing so tells a
+    card-tester exactly which card failed which control.
+  safe_to_show_buyer:
+  - 3101
+  - 3104
+  - 3105
+  - 3107
+  - 3123
+  never_show_buyer:
+  - 3102
+  - 3119
+  - 3120
+  - 3127
+  - 3128
+  - 3200
+  - 3201
+  - 3220
+  - 3221
+unknown_outcome_note: >-
+  Five decline-band codes are NOT declines — 3109, 3117, 3118, 3124 and 3125 leave the transaction in
+  an UNKNOWN state and Genome's own behaviour table requires a CHECK request to resolve them. Retrying
+  the payment instead of checking is how a cardholder gets charged twice.
+decline_codes:
+- code: 3100
+  meaning: "Transaction declined by bank network"
+  action: "Ask the cardholder for a different payment method. Do not retry the same card automatically."
+  band: issuer-acquirer
+- code: 3101
+  meaning: "Insufficient funds"
+  action: "Insufficient funds — a later retry may succeed. Respect issuer retry limits; do not retry in a tight loop."
+  band: issuer-acquirer
+- code: 3102
+  meaning: "Card lost or stolen"
+  action: "Card reported lost or stolen. Do not retry. Do not disclose the reason to the buyer."
+  band: issuer-acquirer
+- code: 3103
+  meaning: "3d secure authentication failed"
+  action: "3-D Secure authentication failed. Restart the 3DS flow or offer another method."
+  band: issuer-acquirer
+- code: 3104
+  meaning: "Invalid CVV"
+  action: "Invalid CVV. Re-collect the CVV; do not retry with the same value."
+  band: issuer-acquirer
+- code: 3105
+  meaning: "Card expired due to expiry date or expiry date is not correct"
+  action: "Expiry date wrong or card expired. Re-collect expiry."
+  band: issuer-acquirer
+- code: 3106
+  meaning: "Bank cannot process selected amount"
+  action: "Issuer will not process this amount. Try a lower amount or another method."
+  band: issuer-acquirer
+- code: 3107
+  meaning: "Invalid card number"
+  action: "Invalid card number. Re-collect the PAN."
+  band: issuer-acquirer
+- code: 3108
+  meaning: "It is not possible to issue refund due to bank limit"
+  action: "Refund exceeds the bank refund limit. Split the refund or contact Genome support."
+  band: issuer-acquirer
+- code: 3109
+  meaning: "Timeout between PSP and bank"
+  action: "Timeout between PSP and bank — outcome UNKNOWN. Send a CHECK request before any retry."
+  band: issuer-acquirer
+  outcome: unknown
+- code: 3110
+  meaning: "Not all required data was provided to the specific bank"
+  action: "Bank required data that was not supplied. Fix the request payload; do not blind-retry."
+  band: issuer-acquirer
+- code: 3111
+  meaning: "Access error to a bank acquirer"
+  action: "Acquirer access error. Retry later or route to another MID."
+  band: issuer-acquirer
+- code: 3112
+  meaning: "Card type is not supported by MID"
+  action: "Card type not supported by the MID. Route to a MID that supports it."
+  band: issuer-acquirer
+- code: 3113
+  meaning: "Transaction type is not supported by MID"
+  action: "Transaction type not supported by the MID."
+  band: issuer-acquirer
+- code: 3114
+  meaning: "Currency is not supported by MID"
+  action: "Currency not supported by the MID."
+  band: issuer-acquirer
+- code: 3115
+  meaning: "Refund not possible by bank"
+  action: "Bank will not process the refund. Refund out of band."
+  band: issuer-acquirer
+- code: 3116
+  meaning: "Country is not supported by MID"
+  action: "Country not supported by the MID."
+  band: issuer-acquirer
+- code: 3117
+  meaning: "Malformed bank response"
+  action: "Malformed bank response — outcome UNKNOWN. Send a CHECK request."
+  band: issuer-acquirer
+  outcome: unknown
+- code: 3118
+  meaning: "Connection error between PSP and bank"
+  action: "Connection error between PSP and bank — outcome UNKNOWN. Send a CHECK request."
+  band: issuer-acquirer
+  outcome: unknown
+- code: 3119
+  meaning: "Referral or restricted card"
+  action: "Referral or restricted card. Do not retry."
+  band: issuer-acquirer
+- code: 3120
+  meaning: "Risk Bank Decline"
+  action: "Risk decline at the bank. Do not retry."
+  band: issuer-acquirer
+- code: 3121
+  meaning: "Invalid acquirer token"
+  action: "Invalid acquirer token. Re-tokenize the card."
+  band: issuer-acquirer
+- code: 3122
+  meaning: "Invalid acquirer reference"
+  action: "Invalid acquirer reference. Verify the base_reference you sent."
+  band: issuer-acquirer
+- code: 3123
+  meaning: "Card 3D secure is not enabled"
+  action: "Card is not enrolled in 3-D Secure. Use a non-3DS flow if the MID allows it."
+  band: issuer-acquirer
+- code: 3124
+  meaning: "Unknown acquirer processing status"
+  action: "Unknown acquirer processing status — outcome UNKNOWN. Send a CHECK request."
+  band: issuer-acquirer
+  outcome: unknown
+- code: 3125
+  meaning: "Acquirer internal error"
+  action: "Acquirer internal error — outcome UNKNOWN. Send a CHECK request."
+  band: issuer-acquirer
+  outcome: unknown
+- code: 3126
+  meaning: "Withdrawal frequency limit exceeded"
+  action: "Withdrawal frequency limit exceeded. Wait before retrying."
+  band: issuer-acquirer
+- code: 3127
+  meaning: "Bank negative list"
+  action: "Card is on a bank negative list. Do not retry."
+  band: issuer-acquirer
+- code: 3128
+  meaning: "Fraud bank decline"
+  action: "Fraud decline at the bank. Do not retry."
+  band: issuer-acquirer
+- code: 3129
+  meaning: "Authorization declined"
+  action: "Authorization declined. Offer another payment method."
+  band: issuer-acquirer
+- code: 3130
+  meaning: "Revocation of authorization order"
+  action: "Revocation of authorization order — the cardholder revoked standing authority. Stop recurring attempts."
+  band: issuer-acquirer
+- code: 3131
+  meaning: "Repeats not allowed by operator"
+  action: "Repeats not allowed by the operator. Stop retrying."
+  band: issuer-acquirer
+- code: 3132
+  meaning: "Recurring is stopped by the customer"
+  action: "Recurring stopped by the customer. Cancel the subscription attempt."
+  band: issuer-acquirer
+- code: 3134
+  meaning: "Transaction is expired (by bank)"
+  action: "Transaction expired at the bank. Start a new transaction."
+  band: issuer-acquirer
+- code: 3135
+  meaning: "Verification required by issuer"
+  action: "Issuer requires verification. Route through 3-D Secure."
+  band: issuer-acquirer
+- code: 3140
+  meaning: "General bank decline"
+  action: "General bank decline. Offer another payment method."
+  band: issuer-acquirer
+- code: 3150
+  meaning: "Invalid transaction"
+  action: "Invalid transaction. Review the request against the field reference."
+  band: issuer-acquirer
+- code: 3157
+  meaning: "Transaction not permitted"
+  action: "Transaction not permitted for this card or account."
+  band: issuer-acquirer
+- code: 3170
+  meaning: "Invalid or closed account"
+  action: "Invalid or closed account. Do not retry."
+  band: issuer-acquirer
+- code: 3200
+  meaning: "Declined by anti-fraud system"
+  action: "Declined by the Genome anti-fraud system. Do not retry."
+  band: anti-fraud
+- code: 3201
+  meaning: "Sent for manual review by anti-fraud system"
+  action: "Held for manual anti-fraud review. Poll with CHECK; do not resubmit."
+  band: anti-fraud
+- code: 3202
+  meaning: "Volume limit exceeded"
+  action: "Volume limit exceeded. Wait for the limit window or contact Genome."
+  band: anti-fraud
+- code: 3203
+  meaning: "Refund limit exceeded"
+  action: "Refund limit exceeded. Contact Genome support."
+  band: anti-fraud
+- code: 3220
+  meaning: "Declined by anti-fraud trust lists"
+  action: "Declined by an anti-fraud trust list. Do not retry."
+  band: anti-fraud
+- code: 3221
+  meaning: "Sent for manual review by anti-fraud trust lists"
+  action: "Held for manual review by an anti-fraud trust list. Poll with CHECK; do not resubmit."
+  band: anti-fraud
+summary:
+  decline_code_count: 45
+  issuer_acquirer: 39
+  anti_fraud: 6
+  unknown_outcome: 5
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
