@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Genome Payments Host-to-Host Payouts API
+  title: Genome Payments Payouts API
   description: 'Genome merchant payments API. Includes the Payout API for sending funds to
 
     cardholders (full card or tokenized card) and the Host-to-Host API for
@@ -13,9 +13,7 @@ info:
 
     Each request is authenticated using merchant_account and merchant_password
 
-    credentials issued by Genome.
-
-    '
+    credentials issued by Genome.'
   version: 1.0.0
   contact:
     name: Genome Developer Documentation
@@ -36,9 +34,7 @@ paths:
 
         card. The final status is returned asynchronously to the merchant
 
-        callback URL.
-
-        '
+        callback URL.'
       operationId: initPayout
       requestBody:
         required: true
@@ -58,42 +54,7 @@ paths:
         '401':
           $ref: '#/components/responses/Error'
 components:
-  responses:
-    Error:
-      description: Error response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        code:
-          type: integer
-        message:
-          type: string
-    PayoutResponse:
-      type: object
-      properties:
-        sessionid:
-          type: string
-          maxLength: 36
-        timestamp:
-          type: integer
-        status:
-          type: string
-          enum:
-          - pending
-          - success
-          - decline
-          - error
-        code:
-          type: integer
-        message:
-          type: string
     PayoutRequest:
       type: object
       required:
@@ -144,3 +105,38 @@ components:
           type: string
         card[card_token]:
           type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+    PayoutResponse:
+      type: object
+      properties:
+        sessionid:
+          type: string
+          maxLength: 36
+        timestamp:
+          type: integer
+        status:
+          type: string
+          enum:
+          - pending
+          - success
+          - decline
+          - error
+        code:
+          type: integer
+        message:
+          type: string
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

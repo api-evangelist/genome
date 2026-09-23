@@ -13,9 +13,7 @@ info:
 
     Each request is authenticated using merchant_account and merchant_password
 
-    credentials issued by Genome.
-
-    '
+    credentials issued by Genome.'
   version: 1.0.0
   contact:
     name: Genome Developer Documentation
@@ -34,9 +32,7 @@ paths:
       summary: Process a card transaction
       description: 'Submit a card transaction. The transaction_type parameter determines
 
-        the operation (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK).
-
-        '
+        the operation (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID, CHECK).'
       operationId: processTransaction
       requestBody:
         required: true
@@ -59,35 +55,7 @@ paths:
         '401':
           $ref: '#/components/responses/Error'
 components:
-  responses:
-    Error:
-      description: Error response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    TransactionResponse:
-      type: object
-      properties:
-        sessionid:
-          type: string
-        timestamp:
-          type: integer
-        status:
-          type: string
-          enum:
-          - pending
-          - success
-          - decline
-          - error
-        code:
-          type: integer
-        message:
-          type: string
-        redirect_url:
-          type: string
-          description: Present for 3DS flows
     HostToHostRequest:
       type: object
       required:
@@ -146,6 +114,27 @@ components:
               type: string
             card_token:
               type: string
+    TransactionResponse:
+      type: object
+      properties:
+        sessionid:
+          type: string
+        timestamp:
+          type: integer
+        status:
+          type: string
+          enum:
+          - pending
+          - success
+          - decline
+          - error
+        code:
+          type: integer
+        message:
+          type: string
+        redirect_url:
+          type: string
+          description: Present for 3DS flows
     Error:
       type: object
       properties:
@@ -155,3 +144,10 @@ components:
           type: integer
         message:
           type: string
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
