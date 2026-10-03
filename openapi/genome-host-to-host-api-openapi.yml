@@ -55,13 +55,6 @@ paths:
         '401':
           $ref: '#/components/responses/Error'
 components:
-  responses:
-    Error:
-      description: Error response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     HostToHostRequest:
       type: object
@@ -121,6 +114,15 @@ components:
               type: string
             card_token:
               type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
     TransactionResponse:
       type: object
       properties:
@@ -142,12 +144,10 @@ components:
         redirect_url:
           type: string
           description: Present for 3DS flows
+  responses:
     Error:
-      type: object
-      properties:
-        status:
-          type: string
-        code:
-          type: integer
-        message:
-          type: string
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

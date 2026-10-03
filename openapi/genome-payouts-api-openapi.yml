@@ -54,19 +54,22 @@ paths:
         '401':
           $ref: '#/components/responses/Error'
 components:
-  responses:
-    Error:
-      description: Error response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
+    PayoutResponse:
       type: object
       properties:
+        sessionid:
+          type: string
+          maxLength: 36
+        timestamp:
+          type: integer
         status:
           type: string
+          enum:
+          - pending
+          - success
+          - decline
+          - error
         code:
           type: integer
         message:
@@ -121,22 +124,19 @@ components:
           type: string
         card[card_token]:
           type: string
-    PayoutResponse:
+    Error:
       type: object
       properties:
-        sessionid:
-          type: string
-          maxLength: 36
-        timestamp:
-          type: integer
         status:
           type: string
-          enum:
-          - pending
-          - success
-          - decline
-          - error
         code:
           type: integer
         message:
           type: string
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
