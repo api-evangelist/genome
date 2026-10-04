@@ -114,15 +114,6 @@ components:
               type: string
             card_token:
               type: string
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        code:
-          type: integer
-        message:
-          type: string
     TransactionResponse:
       type: object
       properties:
@@ -144,6 +135,15 @@ components:
         redirect_url:
           type: string
           description: Present for 3DS flows
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
   responses:
     Error:
       description: Error response
