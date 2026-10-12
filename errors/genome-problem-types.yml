@@ -1,0 +1,28 @@
+generated: '2026-10-12'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/genome-host-to-host-api-openapi.yml
+- openapi/genome-payouts-api-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: Error
+coverage:
+  operations: 2
+  statuses_declared: 2
+problems:
+- status: 400
+  title: Bad Request
+  description: Error response
+  operations: 2
+  media_types:
+  - application/json
+  schema: Error
+- status: 401
+  title: Unauthorized
+  description: Error response
+  operations: 2
+  media_types:
+  - application/json
+  schema: Error

@@ -1,25 +1,22 @@
 generated: '2026-09-12'
 method: searched
-source: https://developers.genome.eu/merchants/ready-to-go-libraries/ + registry metadata endpoints (repo.packagist.org, repo1.maven.org, trunk.cocoapods.org) + https://github.com/genome-eu
+source: https://developers.genome.eu/merchants/ready-to-go-libraries/ + registry metadata endpoints (repo.packagist.org, repo1.maven.org, trunk.cocoapods.org)
+  + https://github.com/genome-eu
 provider: Genome
 providerId: genome
-description: >-
-  First-party Genome client libraries, mobile SDKs and e-commerce plugins. Genome links the Java and
-  PHP merchant clients from its own "Ready-to-go libraries" documentation page; the mobile SDKs,
-  browser SDK and shop plugins are published from the company's own GitHub organisation
-  (github.com/genome-eu) and its own CDN (pay.genome.eu). Versions and publish dates below were read
-  from each registry's metadata endpoint on 2026-09-12.
-note: >-
-  Currency is the headline finding. The two client libraries Genome actively documents were both
-  published 2025-11-25 and are still at 0.0.x. Everything else the company ships — the iOS and
-  Android payment SDKs and every e-commerce plugin — was last released or pushed between 2019 and
-  2022, four to seven years before the API surface they wrap (the Hosted Payment Page JWT flow, the
-  Verification of Payee API and the SEPA Payout API all post-date them).
+description: First-party Genome client libraries, mobile SDKs and e-commerce plugins. Genome links the Java and PHP merchant clients from its
+  own "Ready-to-go libraries" documentation page; the mobile SDKs, browser SDK and shop plugins are published from the company's own GitHub organisation
+  (github.com/genome-eu) and its own CDN (pay.genome.eu). Versions and publish dates below were read from each registry's metadata endpoint on
+  2026-09-12.
+note: Currency is the headline finding. The two client libraries Genome actively documents were both published 2025-11-25 and are still at 0.0.x.
+  Everything else the company ships — the iOS and Android payment SDKs and every e-commerce plugin — was last released or pushed between 2019
+  and 2022, four to seven years before the API surface they wrap (the Hosted Payment Page JWT flow, the Verification of Payee API and the SEPA
+  Payout API all post-date them).
 packages:
 - name: genome/merchant
   registry: packagist
   language: PHP
-  official: true
+  official: false
   url: https://packagist.org/packages/genome/merchant
   metadata_url: https://repo.packagist.org/p2/genome/merchant.json
   source: https://github.com/genome-eu/php-merchant-client
@@ -31,6 +28,7 @@ packages:
   - Hosted Payment Page redirect URL generation
   - MODE_A and MODE_A_TS signature generation
   - assertCallbackSignature callback verification
+  ownership_audit: 'registry metadata names neither the provider''s domain nor its GitHub org: official downgraded (harvest-packages.py --audit)'
 - name: eu.genome:merchantclient
   registry: maven-central
   language: Java
@@ -67,9 +65,7 @@ packages:
   license: MIT
   version: 1.1.1
   published: '2021-10-12'
-  note: >-
-    Published to the CocoaPods trunk by artem.drozd@genome.eu, which is what establishes it as
-    first-party. Last release 2021-10-12.
+  note: Published to the CocoaPods trunk by artem.drozd@genome.eu, which is what establishes it as first-party. Last release 2021-10-12.
 - name: Financial Pixel SDK (iframe build)
   registry: cdn
   language: JavaScript (ES module)
@@ -78,11 +74,9 @@ packages:
   source: https://developers.genome.eu/merchants/web-sdk-integration/
   version: null
   published: null
-  note: >-
-    Distributed only as an unpinned ES module from Genome's own payment host — the documented import
-    URL carries no version segment and no integrity hash, so it floats to whatever is deployed. There
-    is no registry metadata endpoint to query and a consumer cannot tell which build they loaded
-    either; that is the finding, not a gap in this probe.
+  note: Distributed only as an unpinned ES module from Genome's own payment host — the documented import URL carries no version segment and no
+    integrity hash, so it floats to whatever is deployed. There is no registry metadata endpoint to query and a consumer cannot tell which build
+    they loaded either; that is the finding, not a gap in this probe.
 - name: Financial Pixel SDK (popup build)
   registry: cdn
   language: JavaScript (ES module)
@@ -99,9 +93,8 @@ packages:
   url: https://github.com/genome-eu/jfpx
   version: null
   published: '2022-01-14'
-  note: >-
-    Java reference implementation of Genome HPP/FPX. Source-only — never published to Maven Central,
-    so there is no registry version; the date is the last push to the default branch.
+  note: Java reference implementation of Genome HPP/FPX. Source-only — never published to Maven Central, so there is no registry version; the
+    date is the last push to the default branch.
 - name: genome-eu/hpp
   registry: github
   language: PHP

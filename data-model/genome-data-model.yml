@@ -185,6 +185,11 @@ entities:
   relationships:
   - has_many: Psd2Authorisation
     via: authorisationId
+relationships:
+- from: Transaction
+  to: Transaction
+  type: references
+  via: base_reference
 relationship_summary:
   self_referential: Transaction -> Transaction via base_reference
   weakest_link: >-

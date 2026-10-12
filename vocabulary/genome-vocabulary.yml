@@ -1,0 +1,49 @@
+generated: '2026-10-12'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/genome-host-to-host-api-openapi.yml
+- openapi/genome-payouts-api-openapi.yml
+vocabulary:
+  name: Genome Domain Vocabulary
+  description: 'Terms declared by Genome''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-12'
+  terms:
+  - term: Host-to-Host
+    definition: Direct card processing
+    tags:
+    - Resource Group
+    source: openapi/genome-host-to-host-api-openapi.yml
+  - term: Payouts
+    definition: Send funds to cardholders
+    tags:
+    - Resource Group
+    source: openapi/genome-payouts-api-openapi.yml
+  - term: HostToHostRequest
+    definition: 'Object declared by the contract with fields: api_version, merchant_account, merchant_password, transaction_type, transaction_unique_id,
+      amount, currency, callback_url, user_id, user_email, user_ip, card.'
+    tags:
+    - Object
+    source: openapi/genome-host-to-host-api-openapi.yml#/components/schemas/HostToHostRequest
+  - term: TransactionResponse
+    definition: 'Object declared by the contract with fields: sessionid, timestamp, status, code, message, redirect_url.'
+    tags:
+    - Object
+    source: openapi/genome-host-to-host-api-openapi.yml#/components/schemas/TransactionResponse
+  - term: Error
+    definition: 'Object declared by the contract with fields: status, code, message.'
+    tags:
+    - Object
+    source: openapi/genome-host-to-host-api-openapi.yml#/components/schemas/Error
+  - term: PayoutResponse
+    definition: 'Object declared by the contract with fields: sessionid, timestamp, status, code, message.'
+    tags:
+    - Object
+    source: openapi/genome-payouts-api-openapi.yml#/components/schemas/PayoutResponse
+  - term: PayoutRequest
+    definition: 'Object declared by the contract with fields: api_version, merchant_account, merchant_password, method, transaction_unique_id,
+      amount, currency, callback_url, user_id, user_email, card[card_number], card[card_exp_month]. (4 more)'
+    tags:
+    - Object
+    source: openapi/genome-payouts-api-openapi.yml#/components/schemas/PayoutRequest

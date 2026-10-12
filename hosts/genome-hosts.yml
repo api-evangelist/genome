@@ -1,0 +1,133 @@
+generated: '2026-10-12'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 11
+  own: 9
+  other_domain: 0
+  platform: 2
+  roles:
+  - api
+  - docs
+  - identity
+  - marketing
+  - other
+  - portal
+  - source
+  - status
+  - support
+  - website
+hosts:
+- host: api.genome.eu
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: genome.eu
+  role: api
+  relation: own
+- host: blog.genome.eu
+  found_by:
+  - pointer
+  types:
+  - Security
+  - Blog
+  serves: []
+  registrable_domain: genome.eu
+  role: marketing
+  relation: own
+- host: developers.genome.eu
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - DeveloperPortal
+  - Documentation
+  - GettingStarted
+  serves:
+  - docs
+  registrable_domain: genome.eu
+  role: portal
+  relation: own
+- host: gateway.genome.eu
+  found_by:
+  - pointer
+  types:
+  - APIReference
+  serves: []
+  registrable_domain: genome.eu
+  role: docs
+  relation: own
+- host: genome.eu
+  found_by:
+  - pointer
+  types:
+  - Website
+  - Pricing
+  - TermsOfService
+  - PrivacyPolicy
+  serves: []
+  registrable_domain: genome.eu
+  role: website
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: my.genome.eu
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - SignUp
+  serves:
+  - api
+  registrable_domain: genome.eu
+  role: identity
+  relation: own
+- host: pay.genome.eu
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: genome.eu
+  role: other
+  relation: own
+- host: status.genome.eu
+  found_by:
+  - pointer
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: genome.eu
+  role: status
+  relation: own
+- host: support.genome.eu
+  found_by:
+  - pointer
+  - vendor-detect
+  types:
+  - Support
+  serves:
+  - support
+  vendor: zendesk
+  registrable_domain: genome.eu
+  role: support
+  relation: own
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform

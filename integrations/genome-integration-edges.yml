@@ -1,0 +1,23 @@
+generated: '2026-10-12'
+method: none
+source:
+- https://zapier.com/apps/genome/integrations
+- https://n8n.io/integrations/genome/
+- https://composio.dev/toolkits/genome
+- https://monid.ai/tools/genome
+checked:
+- https://composio.dev/toolkits/genome
+- https://developers.genome.eu/
+- https://developers.genome.eu/plugins/
+- https://genome.eu/
+- https://genome.eu/en/integrations
+- https://genome.eu/integrations
+- https://monid.ai/tools/genome
+- https://n8n.io/integrations/genome/
+- https://zapier.com/apps/genome/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []
+note: No integrations page, plugin directory, marketplace listing or contract-named partner was found on Genome's
+  own hosts or on the iPaaS marketplaces checked.
