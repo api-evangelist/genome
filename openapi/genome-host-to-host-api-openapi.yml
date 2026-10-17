@@ -55,7 +55,44 @@ paths:
         '401':
           $ref: '#/components/responses/Error'
 components:
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    TransactionResponse:
+      type: object
+      properties:
+        sessionid:
+          type: string
+        timestamp:
+          type: integer
+        status:
+          type: string
+          enum:
+          - pending
+          - success
+          - decline
+          - error
+        code:
+          type: integer
+        message:
+          type: string
+        redirect_url:
+          type: string
+          description: Present for 3DS flows
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
     HostToHostRequest:
       type: object
       required:
@@ -114,40 +151,3 @@ components:
               type: string
             card_token:
               type: string
-    TransactionResponse:
-      type: object
-      properties:
-        sessionid:
-          type: string
-        timestamp:
-          type: integer
-        status:
-          type: string
-          enum:
-          - pending
-          - success
-          - decline
-          - error
-        code:
-          type: integer
-        message:
-          type: string
-        redirect_url:
-          type: string
-          description: Present for 3DS flows
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        code:
-          type: integer
-        message:
-          type: string
-  responses:
-    Error:
-      description: Error response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
