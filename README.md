@@ -1,4 +1,4 @@
-# Genome (genome)
+# Genome
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,54 +64,178 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Below you can find the information and tutorials that will teach you how to use Genome hosted payment pages, host to host integration, Payout API and Query on demand API.
+Genome, operated by UAB "Maneuver LT" of Vilnius, is an Electronic Money Institution licensed and supervised by the Bank of Lithuania. It runs multi-currency personal and business accounts, issues Visa cards, and sells a merchant payments stack that is documented as six public API surfaces: the Host-to-Host API for direct card processing (AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID and CHECK), the Payout API for sending funds to cardholders, the SEPA Payout API, the Query on Demand reporting API, a Verification of Payee API returning the EPC scheme's match outcomes, and a Berlin Group NextGenPSD2 dedicated interface offered free of charge to registered AISPs and PISPs. Batch transfers are submitted as ISO 20022 pain.001.001.03. Outcomes are carried in a proprietary 137-code response envelope rather than HTTP status codes, and Genome publishes no OpenAPI, AsyncAPI, MCP server or /.well-known/ document on any of its hosts.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/genome/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/genome/refs/heads/main/apis.yml)
+**Areas:** Finance · Payments · Banking · Open Banking · PSD2 · SEPA · Card Processing · Payouts · Electronic Money Institution · Europe
 
-## Scope
+## Genome on APIs.io
 
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
+Everything profiled for Genome is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/genome/](https://apis.io/providers/genome/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (8)
 
-- Finance
-- Payments
+- [Genome](https://apis.io/apis/genome/genome/) — The Genome merchant payments programme as a whole — hosted payment pages, host-to-host card processing, payouts, reporting and the PSD2 dedicated interface,…
+- [Genome Host-to-Host API](https://apis.io/apis/genome/genome-host-to-host-api/) — Direct card processing. One endpoint dispatching eight transaction types — AUTH, AUTH3D, SALE, SALE3D, SETTLE, REFUND, VOID and CHECK — accepting…
+- [Genome Payouts API](https://apis.io/apis/genome/genome-payouts-api/) — Send funds to cardholders using full card data or a tokenized card. The synchronous response is pending; the final status arrives on the merchant callback.…
+- [Genome SEPA Payout API](https://apis.io/apis/genome/genome-sepa-payout-api/) — SEPA credit transfer payouts by IBAN, with a companion transaction-status surface. Amounts can be read including or excluding the SEPA payout fee. No…
+- [Genome Query on Demand API](https://apis.io/apis/genome/genome-query-on-demand-api/) — Historical transaction and chargeback reporting over a required unix time window, paged by page and limit with a 1,000-record page ceiling. No OpenAPI is…
+- [Genome Verification of Payee API](https://apis.io/apis/genome/genome-verification-of-payee-api/) — Check a SEPA beneficiary's name or identifier against the account before sending a payment. Returns the EPC VOP scheme outcomes — match, close match, no…
+- [Genome PSD2 API](https://apis.io/apis/genome/genome-psd2-api/) — Berlin Group NextGenPSD2 dedicated interface. Account Information Services, Payment Initiation Services for SEPA credit transfers, and Confirmation of…
+- [Genome Hosted Payment Page](https://apis.io/apis/genome/genome-hosted-payment-page/) — Redirect checkout hosted by Genome, opened with an HS256 JWT signed with the SHA-256 digest of the payment page secret. Keeps card data out of merchant…
 
-## Timestamps
+### Published properties
 
-- **Created:** 2025-03-01
-- **Modified:** 2026-04-28
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### Genome
+Event-driven and webhook contracts.
 
-Below you can find the information and tutorials that will teach you how to use Genome hosted payment pages, host to host integration, Payout API and Query on demand API.
+- [Genome Webhooks](https://apis.io/asyncapis/genome/genome-webhooks/)
 
-- **Human URL:** [https://genome.eu/docs/](https://genome.eu/docs/)
+#### MCP servers (1)
 
-#### Tags
+Model Context Protocol servers that expose the API to agents.
 
-- Finance
-- Payments
+- [genome-mcp.yml](https://apis.io/servers/genome/genome-mcp-yml/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://developers.genome.eu/)
-- [Getting Started](https://developers.genome.eu/)
-- [Webhooks](https://developers.genome.eu/)
-- [Postman Collection](collections/genome.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/genome.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Common Properties
+- [Genome Agentic Access](https://apis.io/agentic-access/genome/genome-agentic-access/)
 
-- [LinkedIn](https://www.linkedin.com/company/genome)
+#### JSON Schema (4)
+
+The data models the API reads and writes.
+
+- [HostToHostRequest](https://apis.io/schemas/genome/genome-host-to-host-request/)
+- [PayoutRequest](https://apis.io/schemas/genome/genome-payout-request/)
+- [PayoutResponse](https://apis.io/schemas/genome/genome-payout-response/)
+- [TransactionResponse](https://apis.io/schemas/genome/genome-transaction-response/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Genome Context](https://apis.io/jsonld/genome/genome-context/)
+
+#### Collections (3)
+
+Postman and Open Collection request collections.
+
+- [Genome Payments API](https://apis.io/collections/genome/open-genome/)
+- [Genome Payments Host-to-Host API](https://apis.io/collections/genome/open-genome-host-to-host-api/)
+- [Genome Payments Host-to-Host Payouts API](https://apis.io/collections/genome/open-genome-payouts-api/)
+
+#### Overlays (2)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Genome Host To Host Api Overlay](https://apis.io/overlays/genome/genome-host-to-host-api-overlay/)
+- [Genome Payouts Api Overlay](https://apis.io/overlays/genome/genome-payouts-api-overlay/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Genome API Rules](https://apis.io/rules/genome/genome-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Genome Authentication](https://apis.io/security/genome/genome-authentication/)
+- [Genome Domain Security](https://apis.io/security/genome/genome-domain-security/)
+- [Genome Trust Center](https://apis.io/security/genome/genome-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Genome Plans Pricing](https://apis.io/plans/genome/genome-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Genome Rate Limits](https://apis.io/rate-limits/genome/genome-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Genome Finops](https://apis.io/finops/genome/genome-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://genome.eu/)
 - [Documentation](https://developers.genome.eu/)
+- [Getting started](https://developers.genome.eu/merchants/hosted-payment-page/)
+- [API reference](https://gateway.genome.eu/help/cc)
+- [Pricing](https://genome.eu/low-risk-merchant-account-pricing/)
+- [Sign up](https://my.genome.eu/signup)
+- [Support](https://support.genome.eu/hc/en-us/)
+- [Blog](https://blog.genome.eu)
+- [Security](https://blog.genome.eu/category/security/)
+- [Terms of service](https://genome.eu/merchant-terms-of-use/)
+- [Privacy policy](https://genome.eu/privacy-notice/)
+- [GitHub](https://github.com/genome-eu)
+- [Status](https://status.genome.eu)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 63.9** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 68.0 |
+| Contract governance | 35.6 |
+| Operational transparency | 44.7 |
+| Developer ergonomics | 73.2 |
+| Access clarity | 78.9 |
+
+**Agent readiness 31.1** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 23.6** — Banking & Open Finance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/genome/](https://apis.io/providers/genome/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Genome: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/genome/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
