@@ -1,0 +1,334 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://genome.eu/low-risk-merchant-account-pricing/
+sources:
+- https://genome.eu/low-risk-merchant-account-pricing/
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T141238
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: ad-valorem
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+published: true
+note: Low-risk merchant account fee schedule; includes card processing percentages, per-transaction fees,
+  dispute fees and reserve terms.
+plan_count: 22
+currency: EUR
+plans:
+- name: Merchant account application processing
+  price_text: Free
+  period: none
+  unit: application
+- name: Payment initiation via Open Banking (Pay by Bank)
+  price_text: 0.30 EUR
+  price: 0.3
+  currency: EUR
+  period: per-use
+  unit: payment initiation
+- name: EEA debit and credit cards
+  price_text: 1.20% of transaction value
+  price: 1.2
+  period: per-use
+  unit: transaction
+- name: Non-EEA and UK debit and credit cards
+  price_text: 2.90% of transaction value
+  price: 2.9
+  period: per-use
+  unit: transaction
+- name: Processing fee per authorization attempt
+  price_text: 0.15 EUR per transaction
+  price: 0.15
+  currency: EUR
+  period: per-use
+  unit: transaction
+  included_quota: 3D Secure authentication Included in the processing fee
+- name: Refund
+  price_text: 0.50 EUR per transaction
+  price: 0.5
+  currency: EUR
+  period: per-use
+  unit: transaction
+- name: Original Credit Transaction (OCT)
+  price_text: 1.50 EUR per transaction
+  price: 1.5
+  currency: EUR
+  period: per-use
+  unit: transaction
+- name: FX markup GBP or USD
+  price_text: 1% of converted transaction value
+  price: 1
+  period: per-use
+  unit: converted transaction
+- name: FX markup other supported currencies
+  price_text: 2% of converted transaction value
+  price: 2
+  period: per-use
+  unit: converted transaction
+- name: VAU/ABU
+  price_text: 0.10 EUR per update
+  price: 0.1
+  currency: EUR
+  period: per-use
+  unit: update
+- name: Network tokenization
+  price_text: 0.30 EUR per token creation or update
+  price: 0.3
+  currency: EUR
+  period: per-use
+  unit: token
+- name: Standard chargeback fee
+  price_text: 30 EUR per chargeback
+  price: 30
+  currency: EUR
+  period: per-use
+  unit: chargeback
+- name: Retrieval fee
+  price_text: 20 EUR per case
+  price: 20
+  currency: EUR
+  period: per-use
+  unit: case
+- name: Rapid Dispute Resolution (RDR) handling fee
+  price_text: 25 EUR per case
+  price: 25
+  currency: EUR
+  period: per-use
+  unit: case
+- name: Pre-dispute alert handling fee
+  price_text: 40 EUR per case
+  price: 40
+  currency: EUR
+  period: per-use
+  unit: case
+- name: Representment fee
+  price_text: 20 EUR per case
+  price: 20
+  currency: EUR
+  period: per-use
+  unit: case
+- name: Pre-arbitration fee
+  price_text: 30 EUR per case
+  price: 30
+  currency: EUR
+  period: per-use
+  unit: case
+- name: PCI DSS non-compliance fee
+  price_text: 60 EUR per month
+  price: 60
+  currency: EUR
+  period: month
+- name: Excessive chargeback fee
+  price_text: 50 EUR per chargeback
+  price: 50
+  currency: EUR
+  period: per-use
+  unit: chargeback
+- name: Card scheme limit breach fines
+  price_text: 100% of the applicable fine
+  price: 100
+  period: per-use
+  unit: fine
+- name: Rolling reserve
+  price_text: 10% of transaction value
+  price: 10
+  period: per-use
+  unit: transaction
+  included_quota: Rolling reserve period 90 days
+- name: Payout to Genome account
+  price_text: Free
+  period: none
+  unit: payout
+rate_limit_statements:
+- Settlement frequency Daily
+- Transaction hold period 1 day
+- Rolling reserve period 90 days
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - subscription
+  units:
+  - token
+  - transaction
+  plans:
+  - name: Merchant account application processing
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Payment initiation via Open Banking (Pay by Bank)
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: EEA debit and credit cards
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Non-EEA and UK debit and credit cards
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Processing fee per authorization attempt
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Refund
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Original Credit Transaction (OCT)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: FX markup GBP or USD
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: FX markup other supported currencies
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: VAU/ABU
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Network tokenization
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Standard chargeback fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Retrieval fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Rapid Dispute Resolution (RDR) handling fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Pre-dispute alert handling fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Representment fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Pre-arbitration fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: PCI DSS non-compliance fee
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Excessive chargeback fee
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Card scheme limit breach fines
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Rolling reserve
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Payout to Genome account
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
